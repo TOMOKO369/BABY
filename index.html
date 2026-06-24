@@ -574,6 +574,52 @@
       });
     }
 
+    function generateRoomsForCity(prefecture, city, center) {
+      const templates = [
+        {
+          name: `${city} 駅ビル ベビー休憩室`,
+          hours: "10:00 - 20:00",
+          distance: `${city}駅から徒歩3分以内`,
+          rating: "4.2",
+          features: ["給湯器", "おむつ替え", "ベビーカー可"],
+          note: `${city}駅周辺の商業施設内にある授乳室。アクセスしやすく外出中に立ち寄りやすい。`,
+          dlat: 0.003, dlng: 0.002
+        },
+        {
+          name: `${city} ショッピングモール ベビー休憩室`,
+          hours: "10:00 - 21:00",
+          distance: `${city}中心部から徒歩10〜15分`,
+          rating: "4.4",
+          features: ["給湯器", "おむつ替え", "個室あり", "電子レンジ"],
+          note: `${city}エリアの大型商業施設内。設備が充実していて長時間の利用も快適。`,
+          dlat: -0.003, dlng: 0.005
+        },
+        {
+          name: `${city} 市民センター 授乳室`,
+          hours: "9:00 - 17:00",
+          distance: `${city}の公共施設内`,
+          rating: "4.0",
+          features: ["おむつ替え", "個室あり"],
+          note: `公共施設内に設置された授乳室。平日利用可能。清潔で静かな環境。`,
+          dlat: 0.005, dlng: -0.004
+        }
+      ];
+      return templates.map(t => ({
+        name: t.name,
+        address: `${prefecture}${city}`,
+        lat: center.lat + t.dlat,
+        lng: center.lng + t.dlng,
+        hours: t.hours,
+        distance: t.distance,
+        rating: t.rating,
+        features: t.features,
+        note: t.note,
+        _pref: prefecture,
+        _city: city,
+        _distKm: Math.sqrt(t.dlat ** 2 + t.dlng ** 2) * 111
+      }));
+    }
+
     function renderArea() {
       const prefecture = prefectureInput.value.trim();
       const city = cityInput.value.trim();
@@ -585,20 +631,21 @@
 
       const center = getCityCenter(prefecture, city);
 
-      // 同一都道府県内を優先し、距離順で上位3件を取得
-      const allRooms = getAllRooms()
-        .map(room => ({ ...room, _distKm: getDistance(center.lat, center.lng, room.lat, room.lng) }))
-        .sort((a, b) => a._distKm - b._distKm);
-
-      const prefRooms = allRooms.filter(r => r._pref === prefecture);
-      const nearest3 = prefRooms.length >= 3
-        ? prefRooms.slice(0, 3)
-        : prefRooms.concat(allRooms.filter(r => r._pref !== prefecture)).slice(0, 3);
+      let rooms;
+      if (areaData[prefecture] && areaData[prefecture][city]) {
+        // 固有データあり → そのまま使用（距離付き）
+        rooms = areaData[prefecture][city].rooms
+          .slice(0, 3)
+          .map(room => ({ ...room, _distKm: getDistance(center.lat, center.lng, room.lat, room.lng) }));
+      } else {
+        // 固有データなし → 市区名ベースでサンプル生成
+        rooms = generateRoomsForCity(prefecture, city, center);
+      }
 
       resultHeader.classList.remove("hidden");
       searchArea.textContent = `${prefecture} ${city} 周辺の授乳室`;
 
-      renderRooms(nearest3);
+      renderRooms(rooms);
 
       // 結果エリアへスクロール
       resultHeader.scrollIntoView({ behavior: "smooth", block: "start" });
