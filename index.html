@@ -228,8 +228,7 @@
     const areaData = {
       "東京都": {
         "渋谷区": {
-          center: [35.658034, 139.701636],
-          zoom: 14,
+          center: [35.658034, 139.701636], zoom: 14,
           stations: [
             { name: "渋谷駅", lat: 35.658034, lng: 139.701636, lines: "JR・東急・京王・東京メトロ" },
             { name: "原宿駅", lat: 35.670168, lng: 139.702687, lines: "JR山手線" },
@@ -241,10 +240,22 @@
             { name: "代官山 蔦屋書店 2号館", address: "東京都渋谷区猿楽町17-5", lat: 35.648907, lng: 139.699441, hours: "9:00 - 22:00", distance: "代官山駅から徒歩5分", rating: "4.4", features: ["おむつ替え", "ベビーカー可"], note: "静かに休憩しやすい代官山エリアのスポット。" }
           ]
         },
+        "新宿区": {
+          center: [35.690921, 139.700258], zoom: 14,
+          stations: [
+            { name: "新宿駅", lat: 35.690921, lng: 139.700258, lines: "JR・小田急・京王・東京メトロ" },
+            { name: "高田馬場駅", lat: 35.712285, lng: 139.703782, lines: "JR・西武・東京メトロ" },
+            { name: "四ツ谷駅", lat: 35.686041, lng: 139.730644, lines: "JR・東京メトロ" }
+          ],
+          rooms: [
+            { name: "新宿高島屋 9F ベビー休憩室", address: "東京都渋谷区千駄ヶ谷5-24-2", lat: 35.687916, lng: 139.702781, hours: "10:30 - 19:30", distance: "新宿駅から徒歩5分", rating: "4.7", features: ["給湯器", "おむつ替え", "個室あり"], note: "広めで落ち着きやすい百貨店内の授乳室。" },
+            { name: "伊勢丹新宿店 本館6F", address: "東京都新宿区新宿3-14-1", lat: 35.691575, lng: 139.704647, hours: "10:00 - 20:00", distance: "新宿三丁目駅から徒歩1分", rating: "4.6", features: ["給湯器", "おむつ替え", "電子レンジ"], note: "駅近で設備数も多く、外出中の立ち寄りに便利。" }
+          ]
+        }
+      },
       "北海道": {
         "札幌市": {
-          center: [43.0618, 141.3545],
-          zoom: 13,
+          center: [43.0618, 141.3545], zoom: 13,
           stations: [
             { name: "札幌駅", lat: 43.0687, lng: 141.3508, lines: "JR各線・札幌市営地下鉄" },
             { name: "大通駅", lat: 43.0616, lng: 141.3542, lines: "札幌市営地下鉄" },
@@ -256,8 +267,7 @@
           ]
         },
         "釧路市": {
-          center: [42.9849, 144.3810],
-          zoom: 13,
+          center: [42.9849, 144.3810], zoom: 13,
           stations: [
             { name: "釧路駅", lat: 42.9849, lng: 144.3810, lines: "JR根室本線" },
             { name: "東釧路駅", lat: 42.9719, lng: 144.3278, lines: "JR根室本線" }
@@ -267,15 +277,38 @@
           ]
         }
       },
-        "新宿区": {
-          center: [35.690921, 139.700258],
-          zoom: 14,
+      "埼玉県": {
+        "さいたま市": {
+          center: [35.8617, 139.6455], zoom: 13,
           stations: [
-            { name: "新宿駅", lat: 35.690921, lng: 139.700258, lines: "JR・小田急・京王・東京メトロ" },
-            { name: "高田馬場駅", lat: 35.712285, lng: 139.703782, lines: "JR・西武・東京メトロ" },
-            { name: "四ツ谷駅", lat: 35.686041, lng: 139.730644, lines: "JR・東京メトロ" }
+            { name: "大宮駅", lat: 35.9063, lng: 139.6233, lines: "JR各線・埼玉新都市交通" },
+            { name: "浦和駅", lat: 35.8580, lng: 139.6455, lines: "JR京浜東北線・高崎線・宇都宮線" },
+            { name: "さいたま新都心駅", lat: 35.8954, lng: 139.6307, lines: "JR各線" }
           ],
           rooms: [
+            { name: "コクーンシティ 3F ベビー休憩室", address: "埼玉県さいたま市北区吉野町1-407-1", lat: 35.9020, lng: 139.6221, hours: "10:00 - 21:00", distance: "さいたま新都心駅から徒歩5分", rating: "4.6", features: ["給湯器", "おむつ替え", "個室あり"], note: "さいたま新都心エリアの大型商業施設。" },
+            { name: "大宮そごう 5F", address: "埼玉県さいたま市大宮区桜木町1-9-1", lat: 35.9065, lng: 139.6235, hours: "10:00 - 20:00", distance: "大宮駅から徒歩5分", rating: "4.5", features: ["給湯器", "おむつ替え", "電子レンジ"], note: "大宮駅近くの百貨店で立ち寄りやすい。" }
+          ]
+        }
+      },
+      "千葉県": {
+        "千葉市": {
+          center: [35.6074, 140.1065], zoom: 13,
+          stations: [
+            { name: "千葉駅", lat: 35.6074, lng: 140.1065, lines: "JR各線・京成電鉄" },
+            { name: "海浜幕張駅", lat: 35.6477, lng: 140.0299, lines: "JR京葉線" },
+            { name: "蘇我駅", lat: 35.5710, lng: 140.1117, lines: "JR各線" }
+          ],
+          rooms: [
+            { name: "そごう千葉店 6F ベビー休憩室", address: "千葉県千葉市中央区新町1000", lat: 35.6074, lng: 140.1063, hours: "10:00 - 20:00", distance: "千葉駅から徒歩5分", rating: "4.5", features: ["給湯器", "おむつ替え", "個室あり"], note: "千葉駅近くの百貨店で設備が充実。" },
+            { name: "イオンモール幕張新都心 2F", address: "千葉県千葉市美浜区豊砂1-1", lat: 35.6489, lng: 140.0270, hours: "9:00 - 22:00", distance: "海浜幕張駅から徒歩15分", rating: "4.7", features: ["給湯器", "おむつ替え", "キッズスペース", "電子レンジ"], note: "広大なモール内で設備がとても充実している。" }
+          ]
+        }
+      },
+      "神奈川県": {
+        "横浜市": {
+          center: [35.465786, 139.622313], zoom: 13,
+          stations: [
             { name: "横浜駅", lat: 35.465786, lng: 139.622313, lines: "JR・東急・京急・相鉄・横浜市営地下鉄" },
             { name: "桜木町駅", lat: 35.450839, lng: 139.631029, lines: "JR・横浜市営地下鉄" },
             { name: "みなとみらい駅", lat: 35.457434, lng: 139.632882, lines: "みなとみらい線" }
@@ -287,8 +320,7 @@
           ]
         },
         "川崎市": {
-          center: [35.531364, 139.696899],
-          zoom: 14,
+          center: [35.531364, 139.696899], zoom: 14,
           stations: [
             { name: "川崎駅", lat: 35.531364, lng: 139.696899, lines: "JR東海道線・京浜東北線・南武線" },
             { name: "武蔵小杉駅", lat: 35.575872, lng: 139.663268, lines: "JR・東急" },
@@ -300,10 +332,24 @@
           ]
         }
       },
+      "愛知県": {
+        "名古屋市": {
+          center: [35.1709, 136.8815], zoom: 13,
+          stations: [
+            { name: "名古屋駅", lat: 35.1709, lng: 136.8815, lines: "JR各線・名鉄・近鉄・地下鉄" },
+            { name: "栄駅", lat: 35.1701, lng: 136.9066, lines: "名古屋市営地下鉄" },
+            { name: "金山駅", lat: 35.1441, lng: 136.8993, lines: "JR・名鉄・地下鉄" }
+          ],
+          rooms: [
+            { name: "ジェイアール名古屋タカシマヤ 10F", address: "愛知県名古屋市中村区名駅1-1-4", lat: 35.1704, lng: 136.8818, hours: "10:00 - 20:00", distance: "名古屋駅直結", rating: "4.7", features: ["給湯器", "おむつ替え", "個室あり"], note: "名古屋駅直結で雨の日でも安心して利用できる。" },
+            { name: "ミッドランドスクエア 4F", address: "愛知県名古屋市中村区名駅4-7-1", lat: 35.1696, lng: 136.8836, hours: "11:00 - 20:00", distance: "名古屋駅から徒歩5分", rating: "4.5", features: ["おむつ替え", "ベビーカー可"], note: "ラグジュアリーな雰囲気の商業施設内。" },
+            { name: "栄・松坂屋名古屋店 本館7F", address: "愛知県名古屋市中区栄3-16-1", lat: 35.1697, lng: 136.9079, hours: "10:00 - 20:00", distance: "栄駅から徒歩3分", rating: "4.6", features: ["給湯器", "おむつ替え", "電子レンジ"], note: "栄エリアの中心にある百貨店で設備充実。" }
+          ]
+        }
+      },
       "大阪府": {
         "大阪市": {
-          center: [34.702485, 135.495951],
-          zoom: 13,
+          center: [34.702485, 135.495951], zoom: 13,
           stations: [
             { name: "大阪駅", lat: 34.702485, lng: 135.495951, lines: "JR各線" },
             { name: "なんば駅", lat: 34.665439, lng: 135.500126, lines: "大阪メトロ・南海・近鉄" },
@@ -313,6 +359,21 @@
             { name: "グランフロント大阪 南館 4F", address: "大阪府大阪市北区大深町4-20", lat: 34.704373, lng: 135.494939, hours: "11:00 - 21:00", distance: "大阪駅から徒歩5分", rating: "4.6", features: ["給湯器", "おむつ替え", "個室あり"], note: "梅田エリアで買い物中に立ち寄りやすい。" },
             { name: "なんばパークス 5F", address: "大阪府大阪市浪速区難波中2-10-70", lat: 34.661743, lng: 135.501686, hours: "11:00 - 21:00", distance: "なんば駅から徒歩3分", rating: "4.4", features: ["給湯器", "おむつ替え", "ベビーカー可"], note: "南海なんば駅方面からアクセスしやすい。" },
             { name: "あべのハルカス近鉄本店 8F", address: "大阪府大阪市阿倍野区阿倍野筋1-1-43", lat: 34.646164, lng: 135.513053, hours: "10:00 - 20:00", distance: "天王寺駅直結", rating: "4.7", features: ["給湯器", "おむつ替え", "電子レンジ"], note: "天王寺駅直結で設備がまとまっている。" }
+          ]
+        }
+      },
+      "福岡県": {
+        "福岡市": {
+          center: [33.5904, 130.4017], zoom: 13,
+          stations: [
+            { name: "博多駅", lat: 33.5904, lng: 130.4204, lines: "JR各線・福岡市地下鉄" },
+            { name: "天神駅", lat: 33.5898, lng: 130.3982, lines: "福岡市地下鉄・西鉄" },
+            { name: "中洲川端駅", lat: 33.5942, lng: 130.4077, lines: "福岡市地下鉄" }
+          ],
+          rooms: [
+            { name: "アミュプラザ博多 6F", address: "福岡県福岡市博多区博多駅中央街1-1", lat: 33.5904, lng: 130.4200, hours: "10:00 - 21:00", distance: "博多駅直結", rating: "4.7", features: ["給湯器", "おむつ替え", "個室あり"], note: "博多駅直結で便利なベビー休憩室。" },
+            { name: "イムズ 6F", address: "福岡県福岡市中央区天神1-7-11", lat: 33.5899, lng: 130.3980, hours: "10:00 - 20:00", distance: "天神駅から徒歩2分", rating: "4.4", features: ["おむつ替え", "ベビーカー可"], note: "天神エリアの中心部でショッピング中に利用しやすい。" },
+            { name: "キャナルシティ博多 4F", address: "福岡県福岡市博多区住吉1-2-1", lat: 33.5887, lng: 130.4110, hours: "10:00 - 21:00", distance: "博多駅から徒歩10分", rating: "4.5", features: ["給湯器", "おむつ替え", "電子レンジ"], note: "観光スポットとしても人気の複合商業施設。" }
           ]
         }
       }
@@ -466,8 +527,59 @@
       return `https://www.openstreetmap.org/directions?engine=fossgis_osrm_foot&route=%3B${destination.lat}%2C${destination.lng}`;
     }
 
-    function renderStations(area) {
-      stationTitle.textContent = `${citySelect.value}の駅`;
+    // 都市中心座標（areaDataにない市のフォールバック用）
+    const cityCoords = {
+      "北海道":{"函館市":{lat:41.7688,lng:140.7290},"小樽市":{lat:43.1907,lng:140.9946},"旭川市":{lat:43.7707,lng:142.3650},"室蘭市":{lat:42.3152,lng:140.9736},"帯広市":{lat:42.9243,lng:143.1965},"北見市":{lat:43.8035,lng:143.8912},"夕張市":{lat:43.0572,lng:141.9780},"岩見沢市":{lat:43.1963,lng:141.7759},"網走市":{lat:44.0165,lng:144.2729},"留萌市":{lat:43.9433,lng:141.6362},"苫小牧市":{lat:42.6322,lng:141.6077},"稚内市":{lat:45.4047,lng:141.6729},"美唄市":{lat:43.3322,lng:141.8698},"芦別市":{lat:43.5046,lng:142.1902},"江別市":{lat:43.1054,lng:141.5434},"赤平市":{lat:43.5534,lng:142.0471},"紋別市":{lat:44.3543,lng:143.3516},"士別市":{lat:44.1763,lng:142.4137},"名寄市":{lat:44.3576,lng:142.4631},"三笠市":{lat:43.2506,lng:141.8781},"根室市":{lat:43.3291,lng:145.5847},"千歳市":{lat:42.8194,lng:141.6531},"滝川市":{lat:43.5571,lng:141.9108},"砂川市":{lat:43.4960,lng:141.9011},"歌志内市":{lat:43.5318,lng:142.0500},"深川市":{lat:43.7230,lng:142.0493},"富良野市":{lat:43.3425,lng:142.3830},"登別市":{lat:42.4107,lng:141.1152},"恵庭市":{lat:42.8741,lng:141.5741},"伊達市":{lat:42.4744,lng:140.8684},"北広島市":{lat:42.9850,lng:141.5628},"石狩市":{lat:43.2453,lng:141.3374},"北斗市":{lat:41.8236,lng:140.6597}},
+      "東京都":{"千代田区":{lat:35.6942,lng:139.7532},"中央区":{lat:35.6694,lng:139.7720},"港区":{lat:35.6581,lng:139.7516},"文京区":{lat:35.7126,lng:139.7525},"台東区":{lat:35.7138,lng:139.7788},"墨田区":{lat:35.6964,lng:139.8050},"江東区":{lat:35.6733,lng:139.8176},"品川区":{lat:35.6285,lng:139.7388},"目黒区":{lat:35.6411,lng:139.6982},"大田区":{lat:35.5615,lng:139.7164},"世田谷区":{lat:35.6467,lng:139.6537},"中野区":{lat:35.7090,lng:139.6656},"杉並区":{lat:35.6921,lng:139.6360},"豊島区":{lat:35.7289,lng:139.7100},"北区":{lat:35.7520,lng:139.7388},"荒川区":{lat:35.7360,lng:139.7772},"板橋区":{lat:35.7515,lng:139.7092},"練馬区":{lat:35.7390,lng:139.6523},"足立区":{lat:35.7750,lng:139.8020},"葛飾区":{lat:35.7500,lng:139.8470},"江戸川区":{lat:35.7008,lng:139.8732},"八王子市":{lat:35.6663,lng:139.3163},"立川市":{lat:35.7073,lng:139.4082},"武蔵野市":{lat:35.7170,lng:139.5660},"三鷹市":{lat:35.6833,lng:139.5608},"青梅市":{lat:35.7879,lng:139.2753},"府中市":{lat:35.6692,lng:139.4773},"昭島市":{lat:35.7053,lng:139.3537},"調布市":{lat:35.6518,lng:139.5439},"町田市":{lat:35.5432,lng:139.4388},"小金井市":{lat:35.6998,lng:139.5126},"小平市":{lat:35.7278,lng:139.4757},"日野市":{lat:35.6714,lng:139.3946},"東村山市":{lat:35.7546,lng:139.4673},"国分寺市":{lat:35.7010,lng:139.4634},"国立市":{lat:35.6838,lng:139.4421},"福生市":{lat:35.7393,lng:139.3333},"狛江市":{lat:35.6333,lng:139.5782},"東大和市":{lat:35.7456,lng:139.4281},"清瀬市":{lat:35.7852,lng:139.5242},"東久留米市":{lat:35.7574,lng:139.5305},"武蔵村山市":{lat:35.7548,lng:139.3883},"多摩市":{lat:35.6369,lng:139.4466},"稲城市":{lat:35.6376,lng:139.5029},"羽村市":{lat:35.7667,lng:139.3111},"あきる野市":{lat:35.7279,lng:139.2943},"西東京市":{lat:35.7255,lng:139.5386}},
+      "埼玉県":{"川越市":{lat:35.9252,lng:139.4856},"熊谷市":{lat:36.1477,lng:139.3886},"川口市":{lat:35.8075,lng:139.7237},"行田市":{lat:36.1379,lng:139.4548},"秩父市":{lat:35.9920,lng:139.0800},"所沢市":{lat:35.7993,lng:139.4687},"飯能市":{lat:35.8568,lng:139.3319},"加須市":{lat:36.1312,lng:139.6018},"本庄市":{lat:36.2430,lng:139.1904},"東松山市":{lat:36.0424,lng:139.4001},"春日部市":{lat:35.9753,lng:139.7527},"狭山市":{lat:35.8528,lng:139.4126},"羽生市":{lat:36.1745,lng:139.5534},"鴻巣市":{lat:36.0665,lng:139.4885},"深谷市":{lat:36.1997,lng:139.2812},"上尾市":{lat:35.9773,lng:139.5935},"草加市":{lat:35.8254,lng:139.8055},"越谷市":{lat:35.8897,lng:139.7906},"蕨市":{lat:35.8239,lng:139.6797},"戸田市":{lat:35.8175,lng:139.6777},"入間市":{lat:35.8364,lng:139.3909},"朝霞市":{lat:35.7975,lng:139.5936},"志木市":{lat:35.8328,lng:139.5750},"和光市":{lat:35.7821,lng:139.6062},"新座市":{lat:35.7939,lng:139.5255},"桶川市":{lat:36.0017,lng:139.5547},"久喜市":{lat:36.0638,lng:139.6677},"北本市":{lat:36.0254,lng:139.5253},"八潮市":{lat:35.8208,lng:139.8400},"富士見市":{lat:35.8571,lng:139.5497},"三郷市":{lat:35.8322,lng:139.8769},"蓮田市":{lat:35.9996,lng:139.6562},"坂戸市":{lat:35.9573,lng:139.4010},"幸手市":{lat:36.0766,lng:139.7264},"鶴ヶ島市":{lat:35.9311,lng:139.3953},"日高市":{lat:35.9046,lng:139.3384},"吉川市":{lat:35.8929,lng:139.8471},"ふじみ野市":{lat:35.8803,lng:139.5204},"白岡市":{lat:36.0187,lng:139.6740}},
+      "千葉県":{"銚子市":{lat:35.7352,lng:140.8284},"市川市":{lat:35.7218,lng:139.9321},"船橋市":{lat:35.6946,lng:140.0183},"館山市":{lat:34.9969,lng:139.8691},"木更津市":{lat:35.3756,lng:139.9266},"松戸市":{lat:35.7879,lng:139.9031},"野田市":{lat:35.9560,lng:139.8755},"茂原市":{lat:35.4295,lng:140.2982},"成田市":{lat:35.7778,lng:140.3185},"佐倉市":{lat:35.7173,lng:140.2226},"東金市":{lat:35.5631,lng:140.3658},"旭市":{lat:35.7122,lng:140.6449},"習志野市":{lat:35.6780,lng:140.0224},"柏市":{lat:35.8676,lng:139.9752},"勝浦市":{lat:35.1489,lng:140.3107},"市原市":{lat:35.4980,lng:140.1162},"流山市":{lat:35.8564,lng:139.9052},"八千代市":{lat:35.7226,lng:140.1008},"我孫子市":{lat:35.8660,lng:140.0285},"鴨川市":{lat:35.1139,lng:140.0988},"鎌ケ谷市":{lat:35.7741,lng:140.0001},"君津市":{lat:35.3319,lng:139.8915},"富津市":{lat:35.2276,lng:139.8675},"浦安市":{lat:35.6498,lng:139.9023},"四街道市":{lat:35.6672,lng:140.1734},"袖ケ浦市":{lat:35.4279,lng:139.9932},"八街市":{lat:35.6681,lng:140.3183},"印西市":{lat:35.8306,lng:140.1498},"白井市":{lat:35.8010,lng:140.0572},"富里市":{lat:35.7230,lng:140.3236},"南房総市":{lat:35.0394,lng:139.8370},"匝瑳市":{lat:35.7074,lng:140.5677},"香取市":{lat:35.8970,lng:140.4985},"山武市":{lat:35.5868,lng:140.4143},"いすみ市":{lat:35.2562,lng:140.3749},"大網白里市":{lat:35.5343,lng:140.3167}},
+      "神奈川県":{"相模原市":{lat:35.5532,lng:139.3500},"横須賀市":{lat:35.2813,lng:139.6702},"平塚市":{lat:35.3289,lng:139.3498},"鎌倉市":{lat:35.3192,lng:139.5467},"藤沢市":{lat:35.3380,lng:139.4886},"小田原市":{lat:35.2646,lng:139.1527},"茅ヶ崎市":{lat:35.3333,lng:139.4049},"逗子市":{lat:35.2983,lng:139.5778},"三浦市":{lat:35.1426,lng:139.6165},"秦野市":{lat:35.3745,lng:139.2196},"厚木市":{lat:35.4439,lng:139.3625},"大和市":{lat:35.4888,lng:139.4620},"伊勢原市":{lat:35.4012,lng:139.3121},"海老名市":{lat:35.4466,lng:139.3895},"座間市":{lat:35.4877,lng:139.4046},"南足柄市":{lat:35.3226,lng:139.1043},"綾瀬市":{lat:35.4346,lng:139.4265}},
+      "愛知県":{"豊橋市":{lat:34.7693,lng:137.3916},"岡崎市":{lat:34.9556,lng:137.1747},"一宮市":{lat:35.3036,lng:136.8007},"瀬戸市":{lat:35.2231,lng:137.0838},"半田市":{lat:34.8936,lng:136.9387},"春日井市":{lat:35.2476,lng:136.9724},"豊川市":{lat:34.8258,lng:137.3763},"津島市":{lat:35.1745,lng:136.7391},"碧南市":{lat:34.8844,lng:136.9991},"刈谷市":{lat:34.9977,lng:136.9889},"安城市":{lat:34.9590,lng:137.0790},"西尾市":{lat:34.8627,lng:137.0601},"蒲郡市":{lat:34.8281,lng:137.2180},"犬山市":{lat:35.3834,lng:136.9409},"常滑市":{lat:34.8828,lng:136.8349},"江南市":{lat:35.3319,lng:136.8702},"小牧市":{lat:35.2953,lng:136.9113},"稲沢市":{lat:35.2487,lng:136.7826},"新城市":{lat:34.9134,lng:137.5015},"東海市":{lat:35.0181,lng:136.9130},"大府市":{lat:35.0136,lng:137.0282},"知多市":{lat:34.9916,lng:136.8641},"知立市":{lat:35.0109,lng:137.0507},"尾張旭市":{lat:35.2205,lng:137.0359},"高浜市":{lat:34.9258,lng:137.0002},"岩倉市":{lat:35.2798,lng:136.8735},"豊明市":{lat:35.0608,lng:137.0139},"日進市":{lat:35.1329,lng:137.0421},"田原市":{lat:34.6692,lng:137.2648},"愛西市":{lat:35.1605,lng:136.7279},"清須市":{lat:35.1978,lng:136.7767},"北名古屋市":{lat:35.2462,lng:136.8199},"弥富市":{lat:35.1096,lng:136.7235},"みよし市":{lat:35.0828,lng:137.0668},"あま市":{lat:35.1988,lng:136.7870},"長久手市":{lat:35.1835,lng:137.0534}},
+      "大阪府":{"堺市":{lat:34.5733,lng:135.4828},"岸和田市":{lat:34.4601,lng:135.3625},"豊中市":{lat:34.7824,lng:135.4687},"池田市":{lat:34.8218,lng:135.4368},"吹田市":{lat:34.7649,lng:135.5174},"泉大津市":{lat:34.5059,lng:135.4101},"高槻市":{lat:34.8494,lng:135.6173},"貝塚市":{lat:34.4424,lng:135.3570},"守口市":{lat:34.7321,lng:135.5600},"枚方市":{lat:34.8147,lng:135.6531},"茨木市":{lat:34.8163,lng:135.5681},"八尾市":{lat:34.6266,lng:135.6012},"泉佐野市":{lat:34.3957,lng:135.3241},"富田林市":{lat:34.4995,lng:135.5985},"寝屋川市":{lat:34.7650,lng:135.6334},"河内長野市":{lat:34.4575,lng:135.5640},"松原市":{lat:34.5773,lng:135.5540},"大東市":{lat:34.7153,lng:135.6250},"和泉市":{lat:34.4849,lng:135.4301},"箕面市":{lat:34.8275,lng:135.4702},"柏原市":{lat:34.5836,lng:135.6395},"羽曳野市":{lat:34.5549,lng:135.5993},"門真市":{lat:34.7358,lng:135.5871},"摂津市":{lat:34.7797,lng:135.5576},"高石市":{lat:34.5210,lng:135.4414},"藤井寺市":{lat:34.5693,lng:135.5987},"東大阪市":{lat:34.6726,lng:135.6009},"泉南市":{lat:34.3651,lng:135.2958},"四條畷市":{lat:34.7392,lng:135.6394},"交野市":{lat:34.7832,lng:135.6748},"大阪狭山市":{lat:34.5046,lng:135.5540},"阪南市":{lat:34.3519,lng:135.2328}},
+      "福岡県":{"北九州市":{lat:33.8835,lng:130.8751},"大牟田市":{lat:33.0292,lng:130.4495},"久留米市":{lat:33.3191,lng:130.5078},"直方市":{lat:33.7447,lng:130.7305},"飯塚市":{lat:33.6478,lng:130.6904},"田川市":{lat:33.6492,lng:130.8048},"柳川市":{lat:33.1635,lng:130.4045},"八女市":{lat:33.2107,lng:130.5602},"筑後市":{lat:33.2124,lng:130.5028},"大川市":{lat:33.2151,lng:130.3841},"行橋市":{lat:33.7249,lng:130.9811},"豊前市":{lat:33.6133,lng:131.1296},"中間市":{lat:33.8294,lng:130.7082},"小郡市":{lat:33.3941,lng:130.5551},"筑紫野市":{lat:33.5160,lng:130.5196},"春日市":{lat:33.5333,lng:130.4682},"大野城市":{lat:33.5354,lng:130.4779},"宗像市":{lat:33.8057,lng:130.5401},"太宰府市":{lat:33.5131,lng:130.5241},"古賀市":{lat:33.7271,lng:130.4720},"福津市":{lat:33.7693,lng:130.4945},"うきは市":{lat:33.3491,lng:130.7556},"宮若市":{lat:33.7254,lng:130.6712},"嘉麻市":{lat:33.5641,lng:130.7042},"朝倉市":{lat:33.4226,lng:130.6675},"みやま市":{lat:33.1540,lng:130.4775},"糸島市":{lat:33.5568,lng:130.1952},"那珂川市":{lat:33.5139,lng:130.4187}}
+    };
+
+    const prefCenters = {
+      "北海道":{lat:43.0618,lng:141.3545},"東京都":{lat:35.6896,lng:139.6917},
+      "埼玉県":{lat:35.8617,lng:139.6455},"千葉県":{lat:35.6074,lng:140.1065},
+      "神奈川県":{lat:35.4478,lng:139.6425},"愛知県":{lat:35.1802,lng:136.9066},
+      "大阪府":{lat:34.6863,lng:135.5200},"福岡県":{lat:33.5904,lng:130.4017}
+    };
+
+    function getAllRooms() {
+      const rooms = [];
+      for (const pref in areaData) {
+        for (const city in areaData[pref]) {
+          areaData[pref][city].rooms.forEach(room => {
+            rooms.push({ ...room, _pref: pref, _city: city });
+          });
+        }
+      }
+      return rooms;
+    }
+
+    function getDistance(lat1, lng1, lat2, lng2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLng = (lng2 - lng1) * Math.PI / 180;
+      const a = Math.sin(dLat/2)**2 +
+        Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLng/2)**2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
+
+    function getCityCenter(prefecture, city) {
+      if (areaData[prefecture] && areaData[prefecture][city]) {
+        const c = areaData[prefecture][city].center;
+        return { lat: c[0], lng: c[1] };
+      }
+      if (cityCoords[prefecture] && cityCoords[prefecture][city]) {
+        return cityCoords[prefecture][city];
+      }
+      return prefCenters[prefecture] || { lat: 35.68, lng: 139.69 };
+    }
+
+    function renderStations(area, cityName) {
+      stationTitle.textContent = `${cityName}の主要駅`;
       stationList.innerHTML = area.stations.map(station => `
         <button class="station-button flex items-start gap-3 rounded-lg border border-outline-variant/40 bg-surface-container-low p-3 text-left transition hover:border-secondary/40 hover:bg-secondary/5" data-lat="${station.lat}" data-lng="${station.lng}">
           <span class="material-symbols-outlined mt-0.5 text-secondary">train</span>
@@ -477,23 +589,21 @@
           </span>
         </button>
       `).join("");
-
-      stationList.querySelectorAll(".station-button").forEach(button => {
-        button.addEventListener("click", () => {
-          document.getElementById("mapFrame")?.scrollIntoView({ behavior: "smooth" });
-        });
+      stationList.querySelectorAll(".station-button").forEach(btn => {
+        btn.addEventListener("click", () => document.getElementById("mapFrame")?.scrollIntoView({ behavior: "smooth" }));
       });
     }
 
-    function renderRooms(area) {
-      roomCount.textContent = `${area.rooms.length}件`;
-      roomList.innerHTML = area.rooms.map((room, index) => `
+    function renderRooms(roomsArr) {
+      roomCount.textContent = `${roomsArr.length}件`;
+      roomList.innerHTML = roomsArr.map((room, index) => `
         <article class="room-card cursor-pointer overflow-hidden rounded-xl border border-white bg-white shadow-bloom transition hover:border-primary/20 hover:shadow-panel md:grid md:grid-cols-[1fr_auto]" data-index="${index}">
           <div class="p-5">
             <div class="mb-3 flex items-start justify-between gap-3">
               <div>
                 <h4 class="font-display text-lg font-bold leading-tight text-on-surface">${room.name}</h4>
                 <p class="mt-1 text-sm text-on-surface-variant">${room.address}</p>
+                ${room._distKm !== undefined ? `<p class="mt-1 text-xs font-bold text-secondary">📍 選択エリアから約 ${room._distKm.toFixed(1)} km</p>` : ""}
               </div>
               <button class="grid h-10 w-10 shrink-0 place-items-center rounded-full text-primary hover:bg-primary/5" aria-label="${room.name}を保存">
                 <span class="material-symbols-outlined">bookmark_border</span>
@@ -509,12 +619,10 @@
           </div>
           <div class="flex items-center gap-2 border-t border-outline-variant/30 bg-surface-container-low p-4 md:w-44 md:flex-col md:justify-center md:border-l md:border-t-0">
             <a class="flex h-10 w-full items-center justify-center gap-1 rounded-full bg-primary px-4 text-sm font-bold text-white transition hover:opacity-90" href="${routeUrl(room)}" target="_blank" rel="noopener">
-              <span class="material-symbols-outlined text-[18px]">route</span>
-              ルート
+              <span class="material-symbols-outlined text-[18px]">route</span>ルート
             </a>
             <button class="map-focus flex h-10 w-full items-center justify-center gap-1 rounded-full border border-primary/30 px-4 text-sm font-bold text-primary transition hover:bg-primary/5" data-lat="${room.lat}" data-lng="${room.lng}">
-              <span class="material-symbols-outlined text-[18px]">map</span>
-              地図
+              <span class="material-symbols-outlined text-[18px]">map</span>地図
             </button>
           </div>
         </article>
@@ -528,48 +636,54 @@
           document.getElementById("mapFrame")?.scrollIntoView({ behavior: "smooth" });
         });
       });
-
-      roomList.querySelectorAll(".map-focus").forEach(button => {
-        button.addEventListener("click", () => {
-          document.getElementById("mapFrame")?.scrollIntoView({ behavior: "smooth" });
-        });
+      roomList.querySelectorAll(".map-focus").forEach(btn => {
+        btn.addEventListener("click", () => document.getElementById("mapFrame")?.scrollIntoView({ behavior: "smooth" }));
       });
-    }
-
-    function renderMap(area) {
-      // Map view is replaced by embedded Google Maps iframe for Tokyo Station.
-      // This function is intentionally left empty.
     }
 
     function renderArea() {
       const prefecture = prefectureSelect.value;
       const city = citySelect.value;
-      const area = prefecture && city && areaData[prefecture] ? areaData[prefecture][city] : null;
+      if (!prefecture || !city) return;
 
-      mapTitle.textContent = area ? `${prefecture}${city}の授乳室マップ` : `${prefecture}${city || ""}のデータはありません`;
-      if (!area) {
-        stationTitle.textContent = "データなし";
-        stationList.innerHTML = `<p class="text-sm text-on-surface-variant">選択したエリアのデータがありません。</p>`;
-        roomCount.textContent = "";
-        roomList.innerHTML = `<p class="text-sm text-on-surface-variant">選択したエリアの授乳室データはありません。</p>`;
-        return;
+      const center = getCityCenter(prefecture, city);
+
+      // 全授乳室を距離順で並べ上位3件を取得
+      const nearest3 = getAllRooms()
+        .map(room => ({ ...room, _distKm: getDistance(center.lat, center.lng, room.lat, room.lng) }))
+        .sort((a, b) => a._distKm - b._distKm)
+        .slice(0, 3);
+
+      mapTitle.textContent = `${prefecture} ${city}に近い授乳室`;
+
+      // 駅情報：選択市のデータがあればそれを、なければ最寄りエリアから
+      const exactArea = areaData[prefecture] && areaData[prefecture][city] ? areaData[prefecture][city] : null;
+      if (exactArea) {
+        renderStations(exactArea, city);
+      } else {
+        let closestArea = null, closestCity = "", closestDist = Infinity;
+        for (const pref in areaData) {
+          for (const c in areaData[pref]) {
+            const ac = areaData[pref][c].center;
+            const d = getDistance(center.lat, center.lng, ac[0], ac[1]);
+            if (d < closestDist) { closestDist = d; closestArea = areaData[pref][c]; closestCity = c; }
+          }
+        }
+        if (closestArea) {
+          renderStations(closestArea, `${city}（参考：${closestCity}）`);
+        } else {
+          stationTitle.textContent = "";
+          stationList.innerHTML = "";
+        }
       }
 
-      renderStations(area);
-      renderRooms(area);
-      renderMap(area);
+      renderRooms(nearest3);
     }
 
-    prefectureSelect.addEventListener("change", () => {
-      fillCities();
-      renderArea();
-    });
-
+    prefectureSelect.addEventListener("change", () => { fillCities(); renderArea(); });
     citySelect.addEventListener("change", renderArea);
     searchButton.addEventListener("click", renderArea);
-    fitButton.addEventListener("click", () => {
-      document.getElementById("mapFrame")?.scrollIntoView({ behavior: "smooth" });
-    });
+    fitButton.addEventListener("click", () => document.getElementById("mapFrame")?.scrollIntoView({ behavior: "smooth" }));
 
     fillPrefectures();
     fillCities();
