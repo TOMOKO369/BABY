@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>授乳室検索 - Kindred</title>
+  <title>外出中の詰み回避マップ（授乳＆補給）</title>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -101,9 +101,8 @@
 <body class="pb-24">
   <header class="sticky top-0 z-50 h-16 bg-surface/92 glass-nav shadow-bloom">
     <div class="mx-auto flex h-full max-w-7xl items-center justify-between px-5">
-      <div class="flex items-center gap-2">
-        <span class="material-symbols-outlined text-primary text-[28px]">spa</span>
-        <h1 class="font-display text-2xl font-bold text-primary">Kindred</h1>
+      <div class="flex min-w-0 items-center">
+        <h1 class="font-display text-[13px] font-bold leading-tight text-primary sm:text-xl">外出中の詰み回避マップ（授乳＆補給）</h1>
       </div>
       <div class="flex items-center gap-2">
         <button class="grid h-10 w-10 place-items-center rounded-full text-on-surface-variant hover:bg-surface-container-high" aria-label="通知">
@@ -478,8 +477,12 @@
       `;
     }
 
+    let searchCenter = null;
+
     function routeUrl(destination) {
-      return `https://www.google.com/maps/dir/?api=1&destination=${destination.lat},${destination.lng}&travelmode=walking`;
+      const base = 'https://www.google.com/maps/dir/?api=1';
+      const originParam = searchCenter ? `&origin=${searchCenter.lat},${searchCenter.lng}` : '';
+      return `${base}${originParam}&destination=${destination.lat},${destination.lng}&travelmode=walking`;
     }
 
     // 都市中心座標（areaDataにない市のフォールバック用）
@@ -615,6 +618,8 @@
       }
 
       const center = getCityCenter(prefecture, city);
+
+      searchCenter = center;
 
       let rooms;
       if (areaData[prefecture] && areaData[prefecture][city]) {
