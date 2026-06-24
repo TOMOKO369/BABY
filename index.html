@@ -9,7 +9,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&family=Be+Vietnam+Pro:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQkraZJcigICy5SxBMkLaD4dN2TNe2k=" crossorigin="" />
   <script>
     tailwind.config = {
       theme: {
@@ -184,7 +183,9 @@
             <span class="flex items-center gap-1 rounded-full bg-surface-container-low px-3 py-2"><span class="h-2 w-2 rounded-full bg-secondary"></span>主要駅</span>
           </div>
         </div>
-        <div id="map" role="application" aria-label="授乳室と主要駅の地図"></div>
+        <div class="relative overflow-hidden" style="min-height:300px;" aria-label="東京駅の地図">
+          <iframe id="mapFrame" src="https://www.google.com/maps?q=東京駅&output=embed" width="100%" height="300" frameborder="0" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
       </div>
 
       <div class="flex items-center justify-between gap-3">
@@ -223,7 +224,6 @@
     </div>
   </nav>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script>
     const areaData = {
       "東京都": {
@@ -312,23 +312,7 @@
     const searchButton = document.getElementById("searchButton");
     const fitButton = document.getElementById("fitButton");
 
-    const map = L.map("map", { zoomControl: false }).setView([35.658034, 139.701636], 14);
-    L.control.zoom({ position: "bottomright" }).addTo(map);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-
-    const markersLayer = L.layerGroup().addTo(map);
     let activeBounds = null;
-
-    const makeIcon = (type) => L.divIcon({
-      className: "",
-      html: `<div class="marker-pin ${type === "station" ? "station-pin" : "room-pin"}"><span class="material-symbols-outlined">${type === "station" ? "train" : "child_care"}</span></div>`,
-      iconSize: [34, 34],
-      iconAnchor: [17, 34],
-      popupAnchor: [0, -34]
-    });
 
     function fillPrefectures() {
       prefectureSelect.innerHTML = Object.keys(areaData).map(pref => `<option value="${pref}">${pref}</option>`).join("");
@@ -375,7 +359,7 @@
 
       stationList.querySelectorAll(".station-button").forEach(button => {
         button.addEventListener("click", () => {
-          map.setView([Number(button.dataset.lat), Number(button.dataset.lng)], 16, { animate: true });
+          document.getElementById("mapFrame")?.scrollIntoView({ behavior: "smooth" });
         });
       });
     }
@@ -420,43 +404,20 @@
         card.addEventListener("mouseleave", () => card.classList.remove("scale-[1.01]"));
         card.addEventListener("click", event => {
           if (event.target.closest("a, button")) return;
-          const room = area.rooms[Number(card.dataset.index)];
-          map.setView([room.lat, room.lng], 17, { animate: true });
+          document.getElementById("mapFrame")?.scrollIntoView({ behavior: "smooth" });
         });
       });
 
       roomList.querySelectorAll(".map-focus").forEach(button => {
         button.addEventListener("click", () => {
-          map.setView([Number(button.dataset.lat), Number(button.dataset.lng)], 17, { animate: true });
+          document.getElementById("mapFrame")?.scrollIntoView({ behavior: "smooth" });
         });
       });
     }
 
     function renderMap(area) {
-      markersLayer.clearLayers();
-      const points = [];
-
-      area.stations.forEach(station => {
-        const marker = L.marker([station.lat, station.lng], { icon: makeIcon("station") })
-          .bindPopup(`<strong>${station.name}</strong><br><span>${station.lines}</span>`);
-        marker.addTo(markersLayer);
-        points.push([station.lat, station.lng]);
-      });
-
-      area.rooms.forEach(room => {
-        const marker = L.marker([room.lat, room.lng], { icon: makeIcon("room") })
-          .bindPopup(`
-            <strong>${room.name}</strong><br>
-            <span>${room.address}</span><br>
-            <span>${room.hours}</span><br>
-            <a href="${routeUrl(room)}" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;color:#9b4053;font-weight:700;">徒歩ルートを見る</a>
-          `);
-        marker.addTo(markersLayer);
-        points.push([room.lat, room.lng]);
-      });
-
-      activeBounds = L.latLngBounds(points);
-      map.fitBounds(activeBounds, { padding: [36, 36], maxZoom: area.zoom });
+      // Map view is replaced by embedded Google Maps iframe for Tokyo Station.
+      // This function is intentionally left empty.
     }
 
     function renderArea() {
@@ -478,7 +439,7 @@
     citySelect.addEventListener("change", renderArea);
     searchButton.addEventListener("click", renderArea);
     fitButton.addEventListener("click", () => {
-      if (activeBounds) map.fitBounds(activeBounds, { padding: [36, 36] });
+      document.getElementById("mapFrame")?.scrollIntoView({ behavior: "smooth" });
     });
 
     fillPrefectures();
