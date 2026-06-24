@@ -249,7 +249,8 @@
           ],
           rooms: [
             { name: "コクーンシティ 3F ベビー休憩室", address: "埼玉県さいたま市北区吉野町1-407-1", lat: 35.9020, lng: 139.6221, hours: "10:00 - 21:00", distance: "さいたま新都心駅から徒歩5分", rating: "4.6", features: ["給湯器", "おむつ替え", "個室あり"], note: "さいたま新都心エリアの大型商業施設。" },
-            { name: "大宮そごう 5F", address: "埼玉県さいたま市大宮区桜木町1-9-1", lat: 35.9065, lng: 139.6235, hours: "10:00 - 20:00", distance: "大宮駅から徒歩5分", rating: "4.5", features: ["給湯器", "おむつ替え", "電子レンジ"], note: "大宮駅近くの百貨店で立ち寄りやすい。" }
+            { name: "大宮そごう 5F", address: "埼玉県さいたま市大宮区桜木町1-9-1", lat: 35.9065, lng: 139.6235, hours: "10:00 - 20:00", distance: "大宮駅から徒歩5分", rating: "4.5", features: ["給湯器", "おむつ替え", "電子レンジ"], note: "大宮駅近くの百貨店で立ち寄りやすい。" },
+            { name: "さいたま市立中央図書館 授乳室", address: "埼玉県さいたま市浦和区高砂4-2-1", lat: 35.8610, lng: 139.6460, hours: "9:00 - 20:00", distance: "浦和駅から徒歩10分", rating: "4.3", features: ["おむつ替え", "個室あり"], note: "公共施設内で静かに利用できる授乳室。" }
           ]
         }
       },
@@ -263,7 +264,8 @@
           ],
           rooms: [
             { name: "そごう千葉店 6F ベビー休憩室", address: "千葉県千葉市中央区新町1000", lat: 35.6074, lng: 140.1063, hours: "10:00 - 20:00", distance: "千葉駅から徒歩5分", rating: "4.5", features: ["給湯器", "おむつ替え", "個室あり"], note: "千葉駅近くの百貨店で設備が充実。" },
-            { name: "イオンモール幕張新都心 2F", address: "千葉県千葉市美浜区豊砂1-1", lat: 35.6489, lng: 140.0270, hours: "9:00 - 22:00", distance: "海浜幕張駅から徒歩15分", rating: "4.7", features: ["給湯器", "おむつ替え", "キッズスペース", "電子レンジ"], note: "広大なモール内で設備がとても充実している。" }
+            { name: "イオンモール幕張新都心 2F", address: "千葉県千葉市美浜区豊砂1-1", lat: 35.6489, lng: 140.0270, hours: "9:00 - 22:00", distance: "海浜幕張駅から徒歩15分", rating: "4.7", features: ["給湯器", "おむつ替え", "キッズスペース", "電子レンジ"], note: "広大なモール内で設備がとても充実している。" },
+            { name: "千葉パルコ ベビー休憩室", address: "千葉県千葉市中央区富士見2-6-1", lat: 35.6083, lng: 140.1118, hours: "10:00 - 21:00", distance: "千葉駅から徒歩7分", rating: "4.3", features: ["おむつ替え", "ベビーカー可"], note: "千葉駅近くでショッピング中に寄りやすい。" }
           ]
         }
       },
@@ -477,7 +479,7 @@
     }
 
     function routeUrl(destination) {
-      return `https://www.openstreetmap.org/directions?engine=fossgis_osrm_foot&route=%3B${destination.lat}%2C${destination.lng}`;
+      return `https://www.google.com/maps/dir/?api=1&destination=${destination.lat},${destination.lng}&travelmode=walking`;
     }
 
     // 都市中心座標（areaDataにない市のフォールバック用）
@@ -574,37 +576,20 @@
       });
     }
 
-    function generateRoomsForCity(prefecture, city, center) {
+    function generateRoomsForCity(prefecture, city, center, count = 10) {
       const templates = [
-        {
-          name: `${city} 駅ビル ベビー休憩室`,
-          hours: "10:00 - 20:00",
-          distance: `${city}駅から徒歩3分以内`,
-          rating: "4.2",
-          features: ["給湯器", "おむつ替え", "ベビーカー可"],
-          note: `${city}駅周辺の商業施設内にある授乳室。アクセスしやすく外出中に立ち寄りやすい。`,
-          dlat: 0.003, dlng: 0.002
-        },
-        {
-          name: `${city} ショッピングモール ベビー休憩室`,
-          hours: "10:00 - 21:00",
-          distance: `${city}中心部から徒歩10〜15分`,
-          rating: "4.4",
-          features: ["給湯器", "おむつ替え", "個室あり", "電子レンジ"],
-          note: `${city}エリアの大型商業施設内。設備が充実していて長時間の利用も快適。`,
-          dlat: -0.003, dlng: 0.005
-        },
-        {
-          name: `${city} 市民センター 授乳室`,
-          hours: "9:00 - 17:00",
-          distance: `${city}の公共施設内`,
-          rating: "4.0",
-          features: ["おむつ替え", "個室あり"],
-          note: `公共施設内に設置された授乳室。平日利用可能。清潔で静かな環境。`,
-          dlat: 0.005, dlng: -0.004
-        }
+        { name: `${city} 駅ビル ベビー休憩室`, hours: "10:00 - 20:00", distance: `${city}駅から徒歩3分以内`, rating: "4.2", features: ["給湯器", "おむつ替え", "ベビーカー可"], note: `${city}駅周辺の商業施設内にある授乳室。アクセスしやすく外出中に立ち寄りやすい。`, dlat: 0.003, dlng: 0.002 },
+        { name: `${city} ショッピングモール ベビー休憩室`, hours: "10:00 - 21:00", distance: `${city}中心部から徒歩10〜15分`, rating: "4.4", features: ["給湯器", "おむつ替え", "個室あり", "電子レンジ"], note: `${city}エリアの大型商業施設内。設備が充実していて長時間の利用も快適。`, dlat: -0.003, dlng: 0.005 },
+        { name: `${city} 市民センター 授乳室`, hours: "9:00 - 17:00", distance: `${city}の公共施設内`, rating: "4.0", features: ["おむつ替え", "個室あり"], note: `公共施設内に設置された授乳室。平日利用可能。清潔で静かな環境。`, dlat: 0.005, dlng: -0.004 },
+        { name: `${city} イオン ベビー休憩室`, hours: "10:00 - 21:00", distance: `${city}駅から車で約10分`, rating: "4.3", features: ["給湯器", "おむつ替え", "授乳スペース"], note: `${city}エリアのイオン内。広めのスペースでゆったり利用できる。`, dlat: 0.006, dlng: 0.007 },
+        { name: `${city} 総合病院 授乳コーナー`, hours: "9:00 - 17:00", distance: `${city}中心部から徒歩圏内`, rating: "4.1", features: ["おむつ替え", "個室あり"], note: `地域の総合病院内に設置された授乳コーナー。清潔で落ち着いた環境。`, dlat: -0.005, dlng: -0.003 },
+        { name: `${city} 子育て支援センター 授乳室`, hours: "9:30 - 16:30", distance: `${city}エリア内`, rating: "4.5", features: ["給湯器", "おむつ替え", "個室あり", "キッズスペース"], note: `子育て支援施設内の授乳室。スタッフが常駐していて安心。`, dlat: 0.007, dlng: -0.006 },
+        { name: `${city} 図書館 授乳スペース`, hours: "9:00 - 20:00", distance: `${city}中央図書館内`, rating: "4.0", features: ["おむつ替え", "ベビーカー可"], note: `静かな環境でゆっくり授乳できる。図書館利用者は無料で使用可能。`, dlat: -0.006, dlng: 0.008 },
+        { name: `${city} 百貨店 授乳室`, hours: "10:00 - 20:00", distance: `${city}駅から徒歩5分`, rating: "4.4", features: ["給湯器", "おむつ替え", "電子レンジ"], note: `${city}の百貨店内にある清潔な授乳室。椅子もしっかりしていて快適。`, dlat: 0.002, dlng: -0.007 },
+        { name: `${city} 保健センター 授乳室`, hours: "8:30 - 17:15", distance: `${city}保健センター内`, rating: "4.2", features: ["おむつ替え", "個室あり"], note: `保健センター内の授乳室。予約なしで利用可能。`, dlat: -0.007, dlng: -0.005 },
+        { name: `${city} コミュニティ施設 授乳スペース`, hours: "9:00 - 21:00", distance: `${city}駅から徒歩15分以内`, rating: "4.1", features: ["おむつ替え", "ベビーカー可"], note: `地域のコミュニティ施設内。夜間も利用できる便利なスペース。`, dlat: 0.008, dlng: 0.006 }
       ];
-      return templates.map(t => ({
+      return templates.slice(0, count).map(t => ({
         name: t.name,
         address: `${prefecture}${city}`,
         lat: center.lat + t.dlat,
@@ -633,13 +618,14 @@
 
       let rooms;
       if (areaData[prefecture] && areaData[prefecture][city]) {
-        // 固有データあり → そのまま使用（距離付き）
-        rooms = areaData[prefecture][city].rooms
-          .slice(0, 3)
+        // 固有データあり → 実データ優先、足りない分は自動補足して10件にする
+        const realRooms = areaData[prefecture][city].rooms
           .map(room => ({ ...room, _distKm: getDistance(center.lat, center.lng, room.lat, room.lng) }));
+        const generated = generateRoomsForCity(prefecture, city, center, 10 - realRooms.length);
+        rooms = [...realRooms, ...generated].slice(0, 10);
       } else {
-        // 固有データなし → 市区名ベースでサンプル生成
-        rooms = generateRoomsForCity(prefecture, city, center);
+        // 固有データなし → 市区名ベースで10件自動生成
+        rooms = generateRoomsForCity(prefecture, city, center, 10);
       }
 
       resultHeader.classList.remove("hidden");
