@@ -561,6 +561,9 @@
             <a class="flex h-10 flex-1 items-center justify-center gap-1 rounded-full bg-primary px-4 text-sm font-bold text-white transition hover:opacity-90" href="${routeUrl(room)}" target="_blank" rel="noopener">
               <span class="material-symbols-outlined text-[18px]">route</span>ルートを確認
             </a>
+            <a class="flex h-10 flex-1 items-center justify-center gap-1 rounded-full border border-secondary/40 px-4 text-sm font-bold text-secondary transition hover:bg-secondary/5" href="https://www.google.com/maps/search/ドラッグストア/@${room.lat},${room.lng},15z" target="_blank" rel="noopener">
+              <span class="material-symbols-outlined text-[18px]">local_pharmacy</span>近くのドラッグストア
+            </a>
           </div>
         </article>
       `).join("");
@@ -582,11 +585,15 @@
 
       const center = getCityCenter(prefecture, city);
 
-      // 全授乳室を距離順で並べ上位3件を取得
-      const nearest3 = getAllRooms()
+      // 同一都道府県内を優先し、距離順で上位3件を取得
+      const allRooms = getAllRooms()
         .map(room => ({ ...room, _distKm: getDistance(center.lat, center.lng, room.lat, room.lng) }))
-        .sort((a, b) => a._distKm - b._distKm)
-        .slice(0, 3);
+        .sort((a, b) => a._distKm - b._distKm);
+
+      const prefRooms = allRooms.filter(r => r._pref === prefecture);
+      const nearest3 = prefRooms.length >= 3
+        ? prefRooms.slice(0, 3)
+        : prefRooms.concat(allRooms.filter(r => r._pref !== prefecture)).slice(0, 3);
 
       resultHeader.classList.remove("hidden");
       searchArea.textContent = `${prefecture} ${city} 周辺の授乳室`;
