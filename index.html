@@ -62,56 +62,39 @@
       background-size: 16px;
     }
 
-    #map {
-      height: min(58vh, 560px);
-      min-height: 360px;
-      width: 100%;
-      z-index: 1;
-    }
-
-    .leaflet-popup-content-wrapper,
-    .leaflet-popup-tip {
-      border-radius: 12px;
-      box-shadow: 0 12px 28px rgba(39, 23, 27, 0.16);
-    }
-
-    .leaflet-popup-content {
-      margin: 12px 14px;
-      min-width: 210px;
-      font-family: "Noto Sans JP", sans-serif;
-    }
-
-    .marker-pin {
-      display: grid;
-      place-items: center;
-      width: 34px;
-      height: 34px;
-      border: 3px solid #fff;
-      border-radius: 999px 999px 999px 8px;
-      transform: rotate(-45deg);
-      box-shadow: 0 10px 18px rgba(39, 23, 27, 0.22);
-    }
-
-    .marker-pin span {
-      transform: rotate(45deg);
-      color: #fff;
-      font-size: 18px;
-      font-variation-settings: "FILL" 1, "wght" 600, "GRAD" 0, "opsz" 24;
-    }
-
-    .room-pin { background: #9b4053; }
-    .station-pin { background: #16677c; }
-
     .glass-nav {
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
     }
 
-    @media (max-width: 767px) {
-      #map {
-        height: 420px;
-        min-height: 420px;
-      }
+    .search-input {
+      height: 52px;
+      border-radius: 12px;
+      border: 2px solid rgba(155, 64, 83, 0.2);
+      background: #fff0f2;
+      padding: 0 16px;
+      font-size: 15px;
+      color: #27171b;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
+      font-family: "Be Vietnam Pro", "Noto Sans JP", sans-serif;
+    }
+
+    .search-input:focus {
+      border-color: #9b4053;
+      box-shadow: 0 0 0 4px rgba(155, 64, 83, 0.12);
+    }
+
+    .search-input::placeholder {
+      color: #b89699;
+    }
+
+    .result-empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: #877274;
+      font-size: 14px;
     }
   </style>
 </head>
@@ -133,74 +116,53 @@
     </div>
   </header>
 
-  <main class="mx-auto grid max-w-7xl gap-5 px-5 py-6 lg:grid-cols-[390px_1fr] lg:items-start">
-    <aside class="space-y-5 lg:sticky lg:top-20">
-      <section class="rounded-xl bg-white p-6 shadow-bloom">
-        <div class="mb-5">
-          <p class="mb-1 text-xs font-bold uppercase tracking-[0.12em] text-primary">Nursing room finder</p>
-          <h2 class="font-display text-2xl font-bold text-on-surface">授乳室を探す</h2>
-        </div>
-
-        <div class="grid gap-4">
-          <label class="grid gap-1">
-            <span class="px-1 text-xs font-bold text-on-surface-variant">都道府県</span>
-            <select id="prefectureSelect" class="h-12 rounded-lg border border-primary/20 bg-surface-container-low px-4 pr-10 text-on-surface outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"></select>
-          </label>
-
-          <label class="grid gap-1">
-            <span class="px-1 text-xs font-bold text-on-surface-variant">市区町村</span>
-            <select id="citySelect" class="h-12 rounded-lg border border-primary/20 bg-surface-container-low px-4 pr-10 text-on-surface outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"></select>
-          </label>
-
-          <button id="searchButton" class="flex h-12 items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-bold text-white shadow-lg shadow-primary/20 transition hover:opacity-90 active:scale-[0.98]">
-            <span class="material-symbols-outlined">near_me</span>
-            このエリアで検索
-          </button>
-        </div>
-      </section>
-
-      <section class="rounded-xl bg-white p-5 shadow-bloom">
-        <div class="mb-4 flex items-center justify-between gap-3">
-          <div>
-            <p class="text-xs font-bold text-on-surface-variant">主要駅</p>
-            <h3 id="stationTitle" class="font-display text-xl font-bold text-on-surface"></h3>
-          </div>
-          <span class="rounded-full bg-secondary/10 px-3 py-1 text-xs font-bold text-secondary">駅ピン表示</span>
-        </div>
-        <div id="stationList" class="grid gap-2"></div>
-      </section>
-    </aside>
-
-    <section class="space-y-5">
-      <div class="overflow-hidden rounded-xl border border-white bg-white shadow-panel">
-        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant/40 bg-white px-4 py-3">
-          <div>
-            <p id="mapEyebrow" class="text-xs font-bold text-primary">OpenStreetMap × Leaflet</p>
-            <h2 id="mapTitle" class="font-display text-xl font-bold text-on-surface"></h2>
-          </div>
-          <div class="flex items-center gap-2 text-xs font-bold text-on-surface-variant">
-            <span class="flex items-center gap-1 rounded-full bg-surface-container-low px-3 py-2"><span class="h-2 w-2 rounded-full bg-primary"></span>授乳室</span>
-            <span class="flex items-center gap-1 rounded-full bg-surface-container-low px-3 py-2"><span class="h-2 w-2 rounded-full bg-secondary"></span>主要駅</span>
-          </div>
-        </div>
-        <div class="relative overflow-hidden" style="min-height:300px;" aria-label="東京駅の地図">
-          <iframe id="mapFrame" src="https://www.google.com/maps?q=東京駅&output=embed" width="100%" height="300" frameborder="0" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-        </div>
+  <main class="mx-auto max-w-2xl px-5 py-8">
+    <section class="rounded-2xl bg-white p-6 shadow-bloom mb-6">
+      <div class="mb-5">
+        <p class="mb-1 text-xs font-bold uppercase tracking-[0.12em] text-primary">Nursing room finder</p>
+        <h2 class="font-display text-2xl font-bold text-on-surface">授乳室を探す</h2>
+        <p class="mt-2 text-sm text-on-surface-variant">都道府県と市区町村を入力してください</p>
       </div>
 
-      <div class="flex items-center justify-between gap-3">
-        <div>
-          <p class="text-xs font-bold text-on-surface-variant">施設リスト</p>
-          <h3 class="font-display text-2xl font-bold text-on-surface">授乳室 <span id="roomCount" class="text-primary"></span></h3>
-        </div>
-        <button id="fitButton" class="flex h-10 items-center gap-1 rounded-full border border-primary/30 px-4 text-sm font-bold text-primary transition hover:bg-primary/5">
-          <span class="material-symbols-outlined text-[20px]">zoom_out_map</span>
-          全体表示
+      <div class="grid gap-4">
+        <label class="grid gap-1.5">
+          <span class="px-1 text-xs font-bold text-on-surface-variant">都道府県</span>
+          <input
+            type="text"
+            id="prefectureInput"
+            class="search-input"
+            placeholder="例：東京都、大阪府、北海道"
+            list="prefectureList"
+          />
+          <datalist id="prefectureList"></datalist>
+        </label>
+
+        <label class="grid gap-1.5">
+          <span class="px-1 text-xs font-bold text-on-surface-variant">市区町村</span>
+          <input
+            type="text"
+            id="cityInput"
+            class="search-input"
+            placeholder="例：渋谷区、名古屋市、札幌市"
+            list="cityList"
+          />
+          <datalist id="cityList"></datalist>
+        </label>
+
+        <button id="searchButton" class="flex h-12 items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-bold text-white shadow-lg shadow-primary/20 transition hover:opacity-90 active:scale-[0.98]">
+          <span class="material-symbols-outlined">search</span>
+          授乳室を検索
         </button>
       </div>
-
-      <div id="roomList" class="grid gap-4"></div>
     </section>
+
+    <div id="resultHeader" class="mb-4 hidden">
+      <p class="text-xs font-bold text-on-surface-variant">検索結果</p>
+      <h3 class="font-display text-2xl font-bold text-on-surface">授乳室 <span id="roomCount" class="text-primary"></span></h3>
+      <p id="searchArea" class="mt-1 text-sm text-on-surface-variant"></p>
+    </div>
+
+    <div id="roomList" class="grid gap-4"></div>
   </main>
 
   <nav class="fixed bottom-0 left-0 z-50 w-full rounded-t-xl bg-surface/85 glass-nav shadow-[0_-4px_20px_rgba(255,143,163,0.14)]">
@@ -476,33 +438,24 @@
       "江戸川区": { lat: 35.7008, lng: 139.8732 }
     };
 
-    const prefectureSelect = document.getElementById("prefectureSelect");
-    const citySelect = document.getElementById("citySelect");
+    const prefectureInput = document.getElementById("prefectureInput");
+    const cityInput = document.getElementById("cityInput");
+    const prefectureDatalist = document.getElementById("prefectureList");
+    const cityDatalist = document.getElementById("cityList");
     const roomList = document.getElementById("roomList");
-    const stationList = document.getElementById("stationList");
     const roomCount = document.getElementById("roomCount");
-    const stationTitle = document.getElementById("stationTitle");
-    const mapTitle = document.getElementById("mapTitle");
+    const resultHeader = document.getElementById("resultHeader");
+    const searchArea = document.getElementById("searchArea");
     const searchButton = document.getElementById("searchButton");
-    const fitButton = document.getElementById("fitButton");
 
-    let activeBounds = null;
-
-    function fillPrefectures() {
-      prefectureSelect.innerHTML = allPrefectures.map(pref => `<option value="${pref}">${pref}</option>`).join("");
+    function fillPrefectureDatalist() {
+      prefectureDatalist.innerHTML = allPrefectures.map(pref => `<option value="${pref}">`).join("");
     }
 
-    function fillCities() {
-      const prefecture = prefectureSelect.value;
+    function updateCityDatalist() {
+      const prefecture = prefectureInput.value.trim();
       const cities = allCitiesData[prefecture] || [];
-
-      if (cities.length === 0) {
-        citySelect.innerHTML = `<option value="">データがありません</option>`;
-        citySelect.disabled = true;
-      } else {
-        citySelect.disabled = false;
-        citySelect.innerHTML = cities.map(city => `<option value="${city}">${city}</option>`).join("");
-      }
+      cityDatalist.innerHTML = cities.map(city => `<option value="${city}">`).join("");
     }
 
     function featureBadge(label) {
@@ -578,32 +531,19 @@
       return prefCenters[prefecture] || { lat: 35.68, lng: 139.69 };
     }
 
-    function renderStations(area, cityName) {
-      stationTitle.textContent = `${cityName}の主要駅`;
-      stationList.innerHTML = area.stations.map(station => `
-        <button class="station-button flex items-start gap-3 rounded-lg border border-outline-variant/40 bg-surface-container-low p-3 text-left transition hover:border-secondary/40 hover:bg-secondary/5" data-lat="${station.lat}" data-lng="${station.lng}">
-          <span class="material-symbols-outlined mt-0.5 text-secondary">train</span>
-          <span>
-            <span class="block font-bold text-on-surface">${station.name}</span>
-            <span class="block text-xs text-on-surface-variant">${station.lines}</span>
-          </span>
-        </button>
-      `).join("");
-      stationList.querySelectorAll(".station-button").forEach(btn => {
-        btn.addEventListener("click", () => document.getElementById("mapFrame")?.scrollIntoView({ behavior: "smooth" }));
-      });
-    }
-
     function renderRooms(roomsArr) {
       roomCount.textContent = `${roomsArr.length}件`;
       roomList.innerHTML = roomsArr.map((room, index) => `
-        <article class="room-card cursor-pointer overflow-hidden rounded-xl border border-white bg-white shadow-bloom transition hover:border-primary/20 hover:shadow-panel md:grid md:grid-cols-[1fr_auto]" data-index="${index}">
+        <article class="room-card overflow-hidden rounded-xl border border-white bg-white shadow-bloom transition hover:border-primary/20 hover:shadow-panel" data-index="${index}">
           <div class="p-5">
             <div class="mb-3 flex items-start justify-between gap-3">
               <div>
-                <h4 class="font-display text-lg font-bold leading-tight text-on-surface">${room.name}</h4>
+                <div class="mb-1 flex items-center gap-2">
+                  <span class="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">${index + 1}</span>
+                  <h4 class="font-display text-lg font-bold leading-tight text-on-surface">${room.name}</h4>
+                </div>
                 <p class="mt-1 text-sm text-on-surface-variant">${room.address}</p>
-                ${room._distKm !== undefined ? `<p class="mt-1 text-xs font-bold text-secondary">📍 選択エリアから約 ${room._distKm.toFixed(1)} km</p>` : ""}
+                ${room._distKm !== undefined ? `<p class="mt-1 text-xs font-bold text-secondary">📍 検索エリアから約 ${room._distKm.toFixed(1)} km</p>` : ""}
               </div>
               <button class="grid h-10 w-10 shrink-0 place-items-center rounded-full text-primary hover:bg-primary/5" aria-label="${room.name}を保存">
                 <span class="material-symbols-outlined">bookmark_border</span>
@@ -617,34 +557,28 @@
               <span class="flex items-center gap-1 font-bold text-primary"><span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'FILL' 1;">star</span>${room.rating}</span>
             </div>
           </div>
-          <div class="flex items-center gap-2 border-t border-outline-variant/30 bg-surface-container-low p-4 md:w-44 md:flex-col md:justify-center md:border-l md:border-t-0">
-            <a class="flex h-10 w-full items-center justify-center gap-1 rounded-full bg-primary px-4 text-sm font-bold text-white transition hover:opacity-90" href="${routeUrl(room)}" target="_blank" rel="noopener">
-              <span class="material-symbols-outlined text-[18px]">route</span>ルート
+          <div class="flex items-center gap-3 border-t border-outline-variant/30 bg-surface-container-low p-4">
+            <a class="flex h-10 flex-1 items-center justify-center gap-1 rounded-full bg-primary px-4 text-sm font-bold text-white transition hover:opacity-90" href="${routeUrl(room)}" target="_blank" rel="noopener">
+              <span class="material-symbols-outlined text-[18px]">route</span>ルートを確認
             </a>
-            <button class="map-focus flex h-10 w-full items-center justify-center gap-1 rounded-full border border-primary/30 px-4 text-sm font-bold text-primary transition hover:bg-primary/5" data-lat="${room.lat}" data-lng="${room.lng}">
-              <span class="material-symbols-outlined text-[18px]">map</span>地図
-            </button>
           </div>
         </article>
       `).join("");
 
       roomList.querySelectorAll(".room-card").forEach(card => {
-        card.addEventListener("mouseenter", () => card.classList.add("scale-[1.01]"));
+        card.addEventListener("mouseenter", () => card.classList.add("scale-[1.01]", "transition-transform"));
         card.addEventListener("mouseleave", () => card.classList.remove("scale-[1.01]"));
-        card.addEventListener("click", event => {
-          if (event.target.closest("a, button")) return;
-          document.getElementById("mapFrame")?.scrollIntoView({ behavior: "smooth" });
-        });
-      });
-      roomList.querySelectorAll(".map-focus").forEach(btn => {
-        btn.addEventListener("click", () => document.getElementById("mapFrame")?.scrollIntoView({ behavior: "smooth" }));
       });
     }
 
     function renderArea() {
-      const prefecture = prefectureSelect.value;
-      const city = citySelect.value;
-      if (!prefecture || !city) return;
+      const prefecture = prefectureInput.value.trim();
+      const city = cityInput.value.trim();
+      if (!prefecture || !city) {
+        resultHeader.classList.add("hidden");
+        roomList.innerHTML = "";
+        return;
+      }
 
       const center = getCityCenter(prefecture, city);
 
@@ -654,40 +588,23 @@
         .sort((a, b) => a._distKm - b._distKm)
         .slice(0, 3);
 
-      mapTitle.textContent = `${prefecture} ${city}に近い授乳室`;
-
-      // 駅情報：選択市のデータがあればそれを、なければ最寄りエリアから
-      const exactArea = areaData[prefecture] && areaData[prefecture][city] ? areaData[prefecture][city] : null;
-      if (exactArea) {
-        renderStations(exactArea, city);
-      } else {
-        let closestArea = null, closestCity = "", closestDist = Infinity;
-        for (const pref in areaData) {
-          for (const c in areaData[pref]) {
-            const ac = areaData[pref][c].center;
-            const d = getDistance(center.lat, center.lng, ac[0], ac[1]);
-            if (d < closestDist) { closestDist = d; closestArea = areaData[pref][c]; closestCity = c; }
-          }
-        }
-        if (closestArea) {
-          renderStations(closestArea, `${city}（参考：${closestCity}）`);
-        } else {
-          stationTitle.textContent = "";
-          stationList.innerHTML = "";
-        }
-      }
+      resultHeader.classList.remove("hidden");
+      searchArea.textContent = `${prefecture} ${city} 周辺の授乳室`;
 
       renderRooms(nearest3);
+
+      // 結果エリアへスクロール
+      resultHeader.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
-    prefectureSelect.addEventListener("change", () => { fillCities(); renderArea(); });
-    citySelect.addEventListener("change", renderArea);
+    prefectureInput.addEventListener("input", updateCityDatalist);
     searchButton.addEventListener("click", renderArea);
-    fitButton.addEventListener("click", () => document.getElementById("mapFrame")?.scrollIntoView({ behavior: "smooth" }));
 
-    fillPrefectures();
-    fillCities();
-    renderArea();
+    // Enterキーでも検索
+    prefectureInput.addEventListener("keydown", e => { if (e.key === "Enter") cityInput.focus(); });
+    cityInput.addEventListener("keydown", e => { if (e.key === "Enter") renderArea(); });
+
+    fillPrefectureDatalist();
   </script>
 </body>
 </html>
