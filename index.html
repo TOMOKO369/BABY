@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>授乳室検索 - Kindred</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&family=Be+Vietnam+Pro:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQkraZJcigICy5SxBMkLaD4dN2TNe2k=" crossorigin="" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: "#9b4053",
+            "primary-container": "#ff8fa3",
+            secondary: "#16677c",
+            surface: "#fff8f7",
+            "surface-container": "#ffe8ec",
+            "surface-container-low": "#fff0f2",
+            "surface-container-high": "#fee1e6",
+            "on-surface": "#27171b",
+            "on-surface-variant": "#544244",
+            outline: "#877274",
+            "outline-variant": "#dac0c3"
+          },
+          fontFamily: {
+            display: ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"],
+            body: ["Be Vietnam Pro", "Noto Sans JP", "sans-serif"]
+          },
+          boxShadow: {
+            bloom: "0 4px 20px rgba(255, 143, 163, 0.16)",
+            panel: "0 16px 42px rgba(84, 66, 68, 0.12)"
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      min-height: 100dvh;
+      background: #fff8f7;
+      color: #27171b;
+      font-family: "Be Vietnam Pro", "Noto Sans JP", sans-serif;
+    }
+
+    .material-symbols-outlined {
+      display: inline-block;
+      font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
+      line-height: 1;
+      letter-spacing: 0;
+      vertical-align: middle;
+    }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239b4053'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 16px;
+    }
+
+    #map {
+      height: min(58vh, 560px);
+      min-height: 360px;
+      width: 100%;
+      z-index: 1;
+    }
+
+    .leaflet-popup-content-wrapper,
+    .leaflet-popup-tip {
+      border-radius: 12px;
+      box-shadow: 0 12px 28px rgba(39, 23, 27, 0.16);
+    }
+
+    .leaflet-popup-content {
+      margin: 12px 14px;
+      min-width: 210px;
+      font-family: "Noto Sans JP", sans-serif;
+    }
+
+    .marker-pin {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 3px solid #fff;
+      border-radius: 999px 999px 999px 8px;
+      transform: rotate(-45deg);
+      box-shadow: 0 10px 18px rgba(39, 23, 27, 0.22);
+    }
+
+    .marker-pin span {
+      transform: rotate(45deg);
+      color: #fff;
+      font-size: 18px;
+      font-variation-settings: "FILL" 1, "wght" 600, "GRAD" 0, "opsz" 24;
+    }
+
+    .room-pin { background: #9b4053; }
+    .station-pin { background: #16677c; }
+
+    .glass-nav {
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    @media (max-width: 767px) {
+      #map {
+        height: 420px;
+        min-height: 420px;
+      }
+    }
+  </style>
+</head>
+<body class="pb-24">
+  <header class="sticky top-0 z-50 h-16 bg-surface/92 glass-nav shadow-bloom">
+    <div class="mx-auto flex h-full max-w-7xl items-center justify-between px-5">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary text-[28px]">spa</span>
+        <h1 class="font-display text-2xl font-bold text-primary">Kindred</h1>
+      </div>
+      <div class="flex items-center gap-2">
+        <button class="grid h-10 w-10 place-items-center rounded-full text-on-surface-variant hover:bg-surface-container-high" aria-label="通知">
+          <span class="material-symbols-outlined">notifications</span>
+        </button>
+        <button class="grid h-10 w-10 place-items-center rounded-full text-on-surface-variant hover:bg-surface-container-high" aria-label="検索">
+          <span class="material-symbols-outlined">search</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto grid max-w-7xl gap-5 px-5 py-6 lg:grid-cols-[390px_1fr] lg:items-start">
+    <aside class="space-y-5 lg:sticky lg:top-20">
+      <section class="rounded-xl bg-white p-6 shadow-bloom">
+        <div class="mb-5">
+          <p class="mb-1 text-xs font-bold uppercase tracking-[0.12em] text-primary">Nursing room finder</p>
+          <h2 class="font-display text-2xl font-bold text-on-surface">授乳室を探す</h2>
+        </div>
+
+        <div class="grid gap-4">
+          <label class="grid gap-1">
+            <span class="px-1 text-xs font-bold text-on-surface-variant">都道府県</span>
+            <select id="prefectureSelect" class="h-12 rounded-lg border border-primary/20 bg-surface-container-low px-4 pr-10 text-on-surface outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"></select>
+          </label>
+
+          <label class="grid gap-1">
+            <span class="px-1 text-xs font-bold text-on-surface-variant">市区町村</span>
+            <select id="citySelect" class="h-12 rounded-lg border border-primary/20 bg-surface-container-low px-4 pr-10 text-on-surface outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"></select>
+          </label>
+
+          <button id="searchButton" class="flex h-12 items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-bold text-white shadow-lg shadow-primary/20 transition hover:opacity-90 active:scale-[0.98]">
+            <span class="material-symbols-outlined">near_me</span>
+            このエリアで検索
+          </button>
+        </div>
+      </section>
+
+      <section class="rounded-xl bg-white p-5 shadow-bloom">
+        <div class="mb-4 flex items-center justify-between gap-3">
+          <div>
+            <p class="text-xs font-bold text-on-surface-variant">主要駅</p>
+            <h3 id="stationTitle" class="font-display text-xl font-bold text-on-surface"></h3>
+          </div>
+          <span class="rounded-full bg-secondary/10 px-3 py-1 text-xs font-bold text-secondary">駅ピン表示</span>
+        </div>
+        <div id="stationList" class="grid gap-2"></div>
+      </section>
+    </aside>
+
+    <section class="space-y-5">
+      <div class="overflow-hidden rounded-xl border border-white bg-white shadow-panel">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant/40 bg-white px-4 py-3">
+          <div>
+            <p id="mapEyebrow" class="text-xs font-bold text-primary">OpenStreetMap × Leaflet</p>
+            <h2 id="mapTitle" class="font-display text-xl font-bold text-on-surface"></h2>
+          </div>
+          <div class="flex items-center gap-2 text-xs font-bold text-on-surface-variant">
+            <span class="flex items-center gap-1 rounded-full bg-surface-container-low px-3 py-2"><span class="h-2 w-2 rounded-full bg-primary"></span>授乳室</span>
+            <span class="flex items-center gap-1 rounded-full bg-surface-container-low px-3 py-2"><span class="h-2 w-2 rounded-full bg-secondary"></span>主要駅</span>
+          </div>
+        </div>
+        <div id="map" role="application" aria-label="授乳室と主要駅の地図"></div>
+      </div>
+
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <p class="text-xs font-bold text-on-surface-variant">施設リスト</p>
+          <h3 class="font-display text-2xl font-bold text-on-surface">授乳室 <span id="roomCount" class="text-primary"></span></h3>
+        </div>
+        <button id="fitButton" class="flex h-10 items-center gap-1 rounded-full border border-primary/30 px-4 text-sm font-bold text-primary transition hover:bg-primary/5">
+          <span class="material-symbols-outlined text-[20px]">zoom_out_map</span>
+          全体表示
+        </button>
+      </div>
+
+      <div id="roomList" class="grid gap-4"></div>
+    </section>
+  </main>
+
+  <nav class="fixed bottom-0 left-0 z-50 w-full rounded-t-xl bg-surface/85 glass-nav shadow-[0_-4px_20px_rgba(255,143,163,0.14)]">
+    <div class="mx-auto flex max-w-2xl justify-around px-5 py-2">
+      <a class="flex min-w-16 flex-col items-center rounded-full bg-primary-container px-4 py-1 text-xs font-bold text-[#782539]" href="#">
+        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">location_on</span>
+        Find
+      </a>
+      <a class="flex min-w-16 flex-col items-center rounded-full px-4 py-1 text-xs font-bold text-on-surface-variant hover:bg-surface-container-high" href="#">
+        <span class="material-symbols-outlined">forum</span>
+        Community
+      </a>
+      <a class="flex min-w-16 flex-col items-center rounded-full px-4 py-1 text-xs font-bold text-on-surface-variant hover:bg-surface-container-high" href="#">
+        <span class="material-symbols-outlined">equalizer</span>
+        Track
+      </a>
+      <a class="flex min-w-16 flex-col items-center rounded-full px-4 py-1 text-xs font-bold text-on-surface-variant hover:bg-surface-container-high" href="#">
+        <span class="material-symbols-outlined">person</span>
+        Profile
+      </a>
+    </div>
+  </nav>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script>
+    const areaData = {
+      "東京都": {
+        "渋谷区": {
+          center: [35.658034, 139.701636],
+          zoom: 14,
+          stations: [
+            { name: "渋谷駅", lat: 35.658034, lng: 139.701636, lines: "JR・東急・京王・東京メトロ" },
+            { name: "原宿駅", lat: 35.670168, lng: 139.702687, lines: "JR山手線" },
+            { name: "恵比寿駅", lat: 35.64669, lng: 139.710106, lines: "JR・東京メトロ" }
+          ],
+          rooms: [
+            { name: "渋谷ヒカリエ ShinQs 5F", address: "東京都渋谷区渋谷2-21-1", lat: 35.659487, lng: 139.703775, hours: "10:00 - 21:00", distance: "渋谷駅から徒歩3分", rating: "4.8", features: ["給湯器", "おむつ替え", "個室あり"], note: "買い物中に寄りやすい駅直結のベビー休憩室。" },
+            { name: "西武渋谷店 A館 7F", address: "東京都渋谷区宇田川町21-1", lat: 35.660285, lng: 139.700088, hours: "10:00 - 20:00", distance: "渋谷駅から徒歩4分", rating: "4.5", features: ["給湯器", "おむつ替え", "電子レンジ"], note: "百貨店内で設備がまとまっていて使いやすい。" },
+            { name: "代官山 蔦屋書店 2号館", address: "東京都渋谷区猿楽町17-5", lat: 35.648907, lng: 139.699441, hours: "9:00 - 22:00", distance: "代官山駅から徒歩5分", rating: "4.4", features: ["おむつ替え", "ベビーカー可"], note: "静かに休憩しやすい代官山エリアのスポット。" }
+          ]
+        },
+        "新宿区": {
+          center: [35.690921, 139.700258],
+          zoom: 14,
+          stations: [
+            { name: "新宿駅", lat: 35.690921, lng: 139.700258, lines: "JR・小田急・京王・東京メトロ" },
+            { name: "高田馬場駅", lat: 35.712285, lng: 139.703782, lines: "JR・西武・東京メトロ" },
+            { name: "四ツ谷駅", lat: 35.686041, lng: 139.730644, lines: "JR・東京メトロ" }
+          ],
+          rooms: [
+            { name: "新宿高島屋 9F ベビー休憩室", address: "東京都渋谷区千駄ヶ谷5-24-2", lat: 35.687916, lng: 139.702781, hours: "10:30 - 19:30", distance: "新宿駅から徒歩5分", rating: "4.7", features: ["給湯器", "おむつ替え", "個室あり"], note: "広めで落ち着きやすい百貨店内の授乳室。" },
+            { name: "伊勢丹新宿店 本館6F", address: "東京都新宿区新宿3-14-1", lat: 35.691575, lng: 139.704647, hours: "10:00 - 20:00", distance: "新宿三丁目駅から徒歩1分", rating: "4.6", features: ["給湯器", "おむつ替え", "電子レンジ"], note: "駅近で設備数も多く、外出中の立ち寄りに便利。" }
+          ]
+        }
+      },
+      "神奈川県": {
+        "横浜市": {
+          center: [35.465786, 139.622313],
+          zoom: 13,
+          stations: [
+            { name: "横浜駅", lat: 35.465786, lng: 139.622313, lines: "JR・東急・京急・相鉄・横浜市営地下鉄" },
+            { name: "桜木町駅", lat: 35.450839, lng: 139.631029, lines: "JR・横浜市営地下鉄" },
+            { name: "みなとみらい駅", lat: 35.457434, lng: 139.632882, lines: "みなとみらい線" }
+          ],
+          rooms: [
+            { name: "そごう横浜店 8F ベビー休憩室", address: "神奈川県横浜市西区高島2-18-1", lat: 35.465327, lng: 139.62554, hours: "10:00 - 20:00", distance: "横浜駅から徒歩4分", rating: "4.7", features: ["給湯器", "おむつ替え", "個室あり"], note: "横浜駅東口側でアクセスしやすい大型施設。" },
+            { name: "MARK IS みなとみらい 3F", address: "神奈川県横浜市西区みなとみらい3-5-1", lat: 35.457939, lng: 139.632622, hours: "10:00 - 20:00", distance: "みなとみらい駅直結", rating: "4.6", features: ["給湯器", "おむつ替え", "ベビーカー可"], note: "駅直結で雨の日でも使いやすい。" },
+            { name: "横浜ワールドポーターズ 2F", address: "神奈川県横浜市中区新港2-2-1", lat: 35.455163, lng: 139.63883, hours: "10:30 - 21:00", distance: "桜木町駅から徒歩10分", rating: "4.3", features: ["おむつ替え", "電子レンジ"], note: "観光中の休憩地点として使いやすい。" }
+          ]
+        },
+        "川崎市": {
+          center: [35.531364, 139.696899],
+          zoom: 14,
+          stations: [
+            { name: "川崎駅", lat: 35.531364, lng: 139.696899, lines: "JR東海道線・京浜東北線・南武線" },
+            { name: "武蔵小杉駅", lat: 35.575872, lng: 139.663268, lines: "JR・東急" },
+            { name: "溝の口駅", lat: 35.600905, lng: 139.610937, lines: "東急田園都市線・大井町線" }
+          ],
+          rooms: [
+            { name: "ラゾーナ川崎プラザ 4F", address: "神奈川県川崎市幸区堀川町72-1", lat: 35.532781, lng: 139.694249, hours: "10:00 - 21:00", distance: "川崎駅直結", rating: "4.6", features: ["給湯器", "おむつ替え", "個室あり"], note: "駅直結の大型商業施設で設備が充実。" },
+            { name: "グランツリー武蔵小杉 4F", address: "神奈川県川崎市中原区新丸子東3-1135-1", lat: 35.573695, lng: 139.660398, hours: "10:00 - 21:00", distance: "武蔵小杉駅から徒歩4分", rating: "4.5", features: ["給湯器", "おむつ替え", "キッズスペース"], note: "子連れ利用を想定したフロア構成。" }
+          ]
+        }
+      },
+      "大阪府": {
+        "大阪市": {
+          center: [34.702485, 135.495951],
+          zoom: 13,
+          stations: [
+            { name: "大阪駅", lat: 34.702485, lng: 135.495951, lines: "JR各線" },
+            { name: "なんば駅", lat: 34.665439, lng: 135.500126, lines: "大阪メトロ・南海・近鉄" },
+            { name: "天王寺駅", lat: 34.647306, lng: 135.513286, lines: "JR・大阪メトロ" }
+          ],
+          rooms: [
+            { name: "グランフロント大阪 南館 4F", address: "大阪府大阪市北区大深町4-20", lat: 34.704373, lng: 135.494939, hours: "11:00 - 21:00", distance: "大阪駅から徒歩5分", rating: "4.6", features: ["給湯器", "おむつ替え", "個室あり"], note: "梅田エリアで買い物中に立ち寄りやすい。" },
+            { name: "なんばパークス 5F", address: "大阪府大阪市浪速区難波中2-10-70", lat: 34.661743, lng: 135.501686, hours: "11:00 - 21:00", distance: "なんば駅から徒歩3分", rating: "4.4", features: ["給湯器", "おむつ替え", "ベビーカー可"], note: "南海なんば駅方面からアクセスしやすい。" },
+            { name: "あべのハルカス近鉄本店 8F", address: "大阪府大阪市阿倍野区阿倍野筋1-1-43", lat: 34.646164, lng: 135.513053, hours: "10:00 - 20:00", distance: "天王寺駅直結", rating: "4.7", features: ["給湯器", "おむつ替え", "電子レンジ"], note: "天王寺駅直結で設備がまとまっている。" }
+          ]
+        }
+      }
+    };
+
+    const prefectureSelect = document.getElementById("prefectureSelect");
+    const citySelect = document.getElementById("citySelect");
+    const roomList = document.getElementById("roomList");
+    const stationList = document.getElementById("stationList");
+    const roomCount = document.getElementById("roomCount");
+    const stationTitle = document.getElementById("stationTitle");
+    const mapTitle = document.getElementById("mapTitle");
+    const searchButton = document.getElementById("searchButton");
+    const fitButton = document.getElementById("fitButton");
+
+    const map = L.map("map", { zoomControl: false }).setView([35.658034, 139.701636], 14);
+    L.control.zoom({ position: "bottomright" }).addTo(map);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    const markersLayer = L.layerGroup().addTo(map);
+    let activeBounds = null;
+
+    const makeIcon = (type) => L.divIcon({
+      className: "",
+      html: `<div class="marker-pin ${type === "station" ? "station-pin" : "room-pin"}"><span class="material-symbols-outlined">${type === "station" ? "train" : "child_care"}</span></div>`,
+      iconSize: [34, 34],
+      iconAnchor: [17, 34],
+      popupAnchor: [0, -34]
+    });
+
+    function fillPrefectures() {
+      prefectureSelect.innerHTML = Object.keys(areaData).map(pref => `<option value="${pref}">${pref}</option>`).join("");
+    }
+
+    function fillCities() {
+      const prefecture = prefectureSelect.value;
+      citySelect.innerHTML = Object.keys(areaData[prefecture]).map(city => `<option value="${city}">${city}</option>`).join("");
+    }
+
+    function featureBadge(label) {
+      const iconMap = {
+        "給湯器": "water_drop",
+        "おむつ替え": "baby_changing_station",
+        "個室あり": "chair",
+        "電子レンジ": "microwave",
+        "ベビーカー可": "stroller",
+        "キッズスペース": "toys"
+      };
+
+      return `
+        <span class="flex items-center gap-1 rounded-full bg-secondary/10 px-3 py-1 text-xs font-bold text-secondary">
+          <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'FILL' 1;">${iconMap[label] || "check_circle"}</span>
+          ${label}
+        </span>
+      `;
+    }
+
+    function routeUrl(destination) {
+      return `https://www.openstreetmap.org/directions?engine=fossgis_osrm_foot&route=%3B${destination.lat}%2C${destination.lng}`;
+    }
+
+    function renderStations(area) {
+      stationTitle.textContent = `${citySelect.value}の駅`;
+      stationList.innerHTML = area.stations.map(station => `
+        <button class="station-button flex items-start gap-3 rounded-lg border border-outline-variant/40 bg-surface-container-low p-3 text-left transition hover:border-secondary/40 hover:bg-secondary/5" data-lat="${station.lat}" data-lng="${station.lng}">
+          <span class="material-symbols-outlined mt-0.5 text-secondary">train</span>
+          <span>
+            <span class="block font-bold text-on-surface">${station.name}</span>
+            <span class="block text-xs text-on-surface-variant">${station.lines}</span>
+          </span>
+        </button>
+      `).join("");
+
+      stationList.querySelectorAll(".station-button").forEach(button => {
+        button.addEventListener("click", () => {
+          map.setView([Number(button.dataset.lat), Number(button.dataset.lng)], 16, { animate: true });
+        });
+      });
+    }
+
+    function renderRooms(area) {
+      roomCount.textContent = `${area.rooms.length}件`;
+      roomList.innerHTML = area.rooms.map((room, index) => `
+        <article class="room-card cursor-pointer overflow-hidden rounded-xl border border-white bg-white shadow-bloom transition hover:border-primary/20 hover:shadow-panel md:grid md:grid-cols-[1fr_auto]" data-index="${index}">
+          <div class="p-5">
+            <div class="mb-3 flex items-start justify-between gap-3">
+              <div>
+                <h4 class="font-display text-lg font-bold leading-tight text-on-surface">${room.name}</h4>
+                <p class="mt-1 text-sm text-on-surface-variant">${room.address}</p>
+              </div>
+              <button class="grid h-10 w-10 shrink-0 place-items-center rounded-full text-primary hover:bg-primary/5" aria-label="${room.name}を保存">
+                <span class="material-symbols-outlined">bookmark_border</span>
+              </button>
+            </div>
+            <p class="mb-4 text-sm text-on-surface-variant">${room.note}</p>
+            <div class="mb-4 flex flex-wrap gap-2">${room.features.map(featureBadge).join("")}</div>
+            <div class="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-outline-variant/30 pt-3 text-sm">
+              <span class="flex items-center gap-1 text-on-surface-variant"><span class="material-symbols-outlined text-[18px] text-primary">schedule</span>${room.hours}</span>
+              <span class="flex items-center gap-1 text-on-surface-variant"><span class="material-symbols-outlined text-[18px] text-primary">directions_walk</span>${room.distance}</span>
+              <span class="flex items-center gap-1 font-bold text-primary"><span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'FILL' 1;">star</span>${room.rating}</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 border-t border-outline-variant/30 bg-surface-container-low p-4 md:w-44 md:flex-col md:justify-center md:border-l md:border-t-0">
+            <a class="flex h-10 w-full items-center justify-center gap-1 rounded-full bg-primary px-4 text-sm font-bold text-white transition hover:opacity-90" href="${routeUrl(room)}" target="_blank" rel="noopener">
+              <span class="material-symbols-outlined text-[18px]">route</span>
+              ルート
+            </a>
+            <button class="map-focus flex h-10 w-full items-center justify-center gap-1 rounded-full border border-primary/30 px-4 text-sm font-bold text-primary transition hover:bg-primary/5" data-lat="${room.lat}" data-lng="${room.lng}">
+              <span class="material-symbols-outlined text-[18px]">map</span>
+              地図
+            </button>
+          </div>
+        </article>
+      `).join("");
+
+      roomList.querySelectorAll(".room-card").forEach(card => {
+        card.addEventListener("mouseenter", () => card.classList.add("scale-[1.01]"));
+        card.addEventListener("mouseleave", () => card.classList.remove("scale-[1.01]"));
+        card.addEventListener("click", event => {
+          if (event.target.closest("a, button")) return;
+          const room = area.rooms[Number(card.dataset.index)];
+          map.setView([room.lat, room.lng], 17, { animate: true });
+        });
+      });
+
+      roomList.querySelectorAll(".map-focus").forEach(button => {
+        button.addEventListener("click", () => {
+          map.setView([Number(button.dataset.lat), Number(button.dataset.lng)], 17, { animate: true });
+        });
+      });
+    }
+
+    function renderMap(area) {
+      markersLayer.clearLayers();
+      const points = [];
+
+      area.stations.forEach(station => {
+        const marker = L.marker([station.lat, station.lng], { icon: makeIcon("station") })
+          .bindPopup(`<strong>${station.name}</strong><br><span>${station.lines}</span>`);
+        marker.addTo(markersLayer);
+        points.push([station.lat, station.lng]);
+      });
+
+      area.rooms.forEach(room => {
+        const marker = L.marker([room.lat, room.lng], { icon: makeIcon("room") })
+          .bindPopup(`
+            <strong>${room.name}</strong><br>
+            <span>${room.address}</span><br>
+            <span>${room.hours}</span><br>
+            <a href="${routeUrl(room)}" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;color:#9b4053;font-weight:700;">徒歩ルートを見る</a>
+          `);
+        marker.addTo(markersLayer);
+        points.push([room.lat, room.lng]);
+      });
+
+      activeBounds = L.latLngBounds(points);
+      map.fitBounds(activeBounds, { padding: [36, 36], maxZoom: area.zoom });
+    }
+
+    function renderArea() {
+      const prefecture = prefectureSelect.value;
+      const city = citySelect.value;
+      const area = areaData[prefecture][city];
+
+      mapTitle.textContent = `${prefecture}${city}の授乳室マップ`;
+      renderStations(area);
+      renderRooms(area);
+      renderMap(area);
+    }
+
+    prefectureSelect.addEventListener("change", () => {
+      fillCities();
+      renderArea();
+    });
+
+    citySelect.addEventListener("change", renderArea);
+    searchButton.addEventListener("click", renderArea);
+    fitButton.addEventListener("click", () => {
+      if (activeBounds) map.fitBounds(activeBounds, { padding: [36, 36] });
+    });
+
+    fillPrefectures();
+    fillCities();
+    renderArea();
+  </script>
+</body>
+</html>
