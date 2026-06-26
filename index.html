@@ -449,7 +449,6 @@
 
     const prefectureInput = document.getElementById("prefectureInput");
     const cityInput = document.getElementById("cityInput");
-    const prefectureDatalist = document.getElementById("prefectureList");
     const cityDatalist = document.getElementById("cityList");
     const roomList = document.getElementById("roomList");
     const roomCount = document.getElementById("roomCount");
@@ -659,7 +658,7 @@
       realRooms.sort((a, b) => a._distKm - b._distKm);
 
       const baseCity = prefectureBaseCities[prefecture] || `${prefecture}中心部`;
-      const generated = generateRoomsForCity(prefecture, baseCity, center, count - realRooms.length);
+      const generated = generateRoomsForCity(prefecture, baseCity, center, Math.max(0, count - realRooms.length));
       return [...realRooms, ...generated].slice(0, count);
     }
 
@@ -700,6 +699,7 @@
     }
 
     prefectureInput.addEventListener("input", updateCityDatalist);
+    prefectureInput.addEventListener("change", updateCityDatalist);
     searchButton.addEventListener("click", renderArea);
 
     // Enterキーでも検索
