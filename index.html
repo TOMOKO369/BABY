@@ -568,6 +568,47 @@
       return prefCenters[prefecture] || { lat: 35.68, lng: 139.69 };
     }
 
+    // 除外すべき名前キーワード（医療施設）
+    const EXCLUDE_NAME_KEYWORDS = ["助産院", "産婦人科", "クリニック"];
+
+    // 除外すべき Google Places types（医療系）
+    const EXCLUDE_TYPES = [
+      "hospital", "doctor", "health", "dentist", "physiotherapist",
+      "pharmacy", "veterinary_care", "drugstore"
+    ];
+
+    /**
+     * 施設を医療機関フィルタで除外すべきか判定
+     * @param {object} room - 施設オブジェクト（name, types プロパティを持つ）
+     * @returns {boolean} true なら除外
+     */
+    function isMedicalFacility(room) {
+      // 名前チェック
+      if (room.name && EXCLUDE_NAME_KEYWORDS.some(kw => room.name.includes(kw))) {
+        return true;
+      }
+      // types チェック（Google Places API から取得した場合など）
+      if (Array.isArray(room.types) && room.types.some(t => EXCLUDE_TYPES.includes(t))) {
+        return true;
+      }
+      return false;
+    }
+
+    /**
+     * 授乳室リストをフィルタリングして返す
+     * ・医療機関（名前・types）は除外
+     * ・名前に「授乳室」を含む施設を先頭に優先
+     */
+    function filterAndPrioritize(rooms) {
+      // 医療機関を除外
+      const filtered = rooms.filter(room => !isMedicalFacility(room));
+
+      // 「授乳室」含む施設を先頭グループ、それ以外を後続グループに分けて結合
+      const priority = filtered.filter(r => r.name && r.name.includes("授乳室"));
+      const rest     = filtered.filter(r => !r.name || !r.name.includes("授乳室"));
+      return [...priority, ...rest];
+    }
+
     function renderRooms(roomsArr) {
       roomCount.textContent = `${roomsArr.length}件`;
       roomList.innerHTML = roomsArr.map((room, index) => `
@@ -688,6 +729,9 @@
         // 固有データなし → 市区名ベースで10件自動生成
         rooms = generateRoomsForCity(prefecture, city, center, 10);
       }
+
+      // 医療機関除外 & 授乳室優先
+      rooms = filterAndPrioritize(rooms);
 
       resultHeader.classList.remove("hidden");
       searchArea.textContent = city ? `${prefecture} ${city} 周辺の授乳室` : `${prefecture}の授乳室`;
