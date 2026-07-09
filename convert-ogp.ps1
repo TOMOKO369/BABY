@@ -23,21 +23,52 @@ function Try-Run {
     }
 }
 
+function Find-Executable {
+    param(
+        [string[]]$Names,
+        [string[]]$FallbackPaths
+    )
+
+    foreach ($name in $Names) {
+        $cmd = Get-Command $name -ErrorAction SilentlyContinue
+        if ($cmd) { return $cmd.Source }
+    }
+
+    foreach ($path in $FallbackPaths) {
+        if (Test-Path $path) { return (Resolve-Path $path).Path }
+    }
+
+    return $null
+}
+
 $url = "file:///" + ($svgFull.Path -replace '\\','/')
 
-# Try Edge (msedge)
-$edgeCmd = "--headless --disable-gpu --screenshot='$outFull' --window-size=$Width,$Height `"$url`""
-if (Get-Command msedge -ErrorAction SilentlyContinue) {
+$edgePath = Find-Executable -Names @('msedge') -FallbackPaths @(
+    'C:\Program Files\Microsoft\Edge\Application\msedge.exe',
+    'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
+)
+$chromePath = Find-Executable -Names @('chrome') -FallbackPaths @(
+    'C:\Program Files\Google\Chrome\Application\chrome.exe',
+    'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe'
+)
+
+$renderArgs = @(
+    '--headless',
+    '--disable-gpu',
+    "--screenshot=$outFull",
+    "--window-size=$Width,$Height",
+    $url
+)
+
+if ($edgePath) {
     Write-Host "Using msedge to render PNG..."
-    $ok = Try-Run msedge $edgeCmd
+    $ok = Try-Run $edgePath $renderArgs
     if ($ok) { Write-Host "Created: $outFull"; exit 0 }
 }
 
-# Try Chrome (chrome)
-$chromeCmd = "--headless --disable-gpu --screenshot='$outFull' --window-size=$Width,$Height `"$url`""
-if (Get-Command chrome -ErrorAction SilentlyContinue) {
+if ($chromePath) {
     Write-Host "Using chrome to render PNG..."
-    $ok = Try-Run chrome $chromeCmd
+    $ok = Try-Run $chromePath $renderArgs
     if ($ok) { Write-Host "Created: $outFull"; exit 0 }
 }
 
